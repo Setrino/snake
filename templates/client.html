@@ -1,0 +1,36 @@
+<html>
+	<head>
+	<!-- 
+	 * Author:		Gianluca Guarini
+	 * Contact: 	gianluca.guarini@gmail.com
+	 * Website:		http://www.gianlucaguarini.com/
+	 * Twitter:		@gianlucaguarini
+	-->
+		<title>Push notification server</title>
+	</head>
+	<body>
+    <div id="container">Loading ...</div>
+    <script src="socket.io/socket.io.js"></script>
+	<script src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+	<script>
+        // creating a new websocket
+        var socket = io.connect('http://localhost:8000');
+        // on message received we print the new data inside the #container div
+        socket.on('notification', function (data) {
+
+            var usersList = "<dl>";
+
+            $.each(data.users,function(index,user){
+                usersList += "<dt>" + user.nickname + "</dt>\n" +
+                        "<dd>" + user.email + "\n" +
+                        "<figure> <img class='img-polaroid' width='50px' src='" + user.avatar + "' /></figure>"
+                "</dd>";
+            });
+            usersList += "</dl>";
+            $('#container').html(usersList);
+
+            $('time').html('Last Update:' + data.time);
+        });
+    </script>
+    </body>
+</html>
