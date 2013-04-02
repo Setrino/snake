@@ -124,8 +124,7 @@ else if($_POST['submit']=='Register')
 		
 		//$pass = substr(md5($_SERVER['REMOTE_ADDR'].microtime().rand(1,100000)),0,6);
 		// Generate a random password
-
-		$pass = mysql_real_escape_string($_POST['password']);
+		$_POST['password'] = mysql_real_escape_string($_POST['password']);
 		// Escape the input data
 
         mysql_query("INSERT INTO users(nick, email, regIP, dt)
@@ -138,7 +137,7 @@ else if($_POST['submit']=='Register')
 		mysql_query("	INSERT INTO passwords(nick,pass)
 						VALUES(
 							'".$_POST['username']."',
-							'".md5($pass)."'
+							'".$_POST['password']."'
 						)");
 		
 		if(mysql_affected_rows($link)==1)
@@ -257,7 +256,7 @@ if($_SESSION['msg'])
             </div>
 
                 <?php
-			
+
 			else:
 			
 			?>
