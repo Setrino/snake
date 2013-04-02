@@ -1,15 +1,90 @@
-body {
+body,h1,h2,h3,p,small,form,input,ul,li,ol,label{
+    /* The reset rules */
     margin:0px;
     padding:0px;
+}
+
+body {
     text-align:center;
+    font-family:Arial, Helvetica, sans-serif;
+    width: 100%;
   }
 
 canvas{
     outline:0;
     border:1px solid #000;
-    margin-left: auto;
-    margin-right: auto;
+
   }
+
+h1{
+    font-size:28px;
+    font-weight:bold;
+    font-family:"Trebuchet MS",Arial, Helvetica, sans-serif;
+    letter-spacing:1px;
+}
+
+h2{
+    font-family:"Arial Narrow",Arial,Helvetica,sans-serif;
+    font-size:10px;
+    font-weight:normal;
+    letter-spacing:1px;
+    padding-left:2px;
+    text-transform:uppercase;
+    white-space:nowrap;
+    margin-top:4px;
+    color:#888888;
+}
+
+#main p{
+    padding-bottom:8px;
+}
+
+.clear{
+    clear:both;
+}
+
+#main{
+    width:800px;
+    /* Centering it in the middle of the page */
+    margin:60px auto;
+}
+
+.container{
+    margin-top:20px;
+    
+    background:#FFFFFF;
+    border:1px solid #E0E0E0;
+    padding:15px;
+    
+    /* Rounded corners */
+    -moz-border-radius:20px;
+    -khtml-border-radius: 20px;
+    -webkit-border-radius: 20px;
+    border-radius:20px;
+}
+
+.err{
+    color:red;
+}
+
+.success{
+    color:#00CC00;
+}
+
+a, a:visited {
+    color:#00BBFF;
+    text-decoration:none;
+    outline:none;
+}
+
+a:hover{
+    text-decoration:underline;
+}
+
+.tutorial-info{
+    text-align:center;
+    padding:10px;
+}  
 
 .bgCover{
     background-color: #000;
@@ -33,8 +108,6 @@ canvas{
 
 .launchLink{
     position: relative;
-    left: 35%;
-    top: -285px;
     width: 32px;
     height: 32px;
     border: 0;

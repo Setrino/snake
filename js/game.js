@@ -799,6 +799,13 @@ function showOverlayBox() {
     });
 }
 
+function alignLaunchLink(){
+    $('.launchLink').css({
+        left:( $('#c').width() - $('.launchLink').width() + 1 ),
+        top:( $('.launchLink').height() - $('#c').height() + 18 )
+    });
+}
+
 function pvp(){
 
     $('.info').html('The PvP is not yet available');
@@ -847,6 +854,7 @@ function doOverlayClose() {
 
 $(document).ready(function(){
 
+    alignLaunchLink();
     endGame = true;
     doOverlayOpen();
 
