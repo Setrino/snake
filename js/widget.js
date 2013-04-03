@@ -1,0 +1,45 @@
+$(document).ready(function(){
+	// This function is executed once the document is loaded
+	
+	// Caching the jQuery selectors:
+	var count = $('.onlineWidget .count');
+	var panel = $('.onlineWidget .panel');
+	var open = false;
+	
+	// Loading the number of users online into the count div:
+	count.load("../templates/no_online.php");
+	
+	$('.onlineWidget').click(
+		function(){
+			// Setting a custom 'open' event on the sliding panel:
+            if(!open)
+			panel.trigger('open');
+            else
+            panel.trigger('close');
+		}
+    ).click();
+	
+	var loaded=false;	// A flag which prevents multiple ajax calls to users_online.php;
+	
+	// Binding functions to custom events:
+	
+	panel.bind('open',function(){
+        open = true;
+        $('.arrow').css({
+            "-webkit-transition": "-webkit-transform 0.2s ease-in-out",
+            "-webkit-transform": "rotateZ(180deg)"
+        });
+		panel.slideDown(function(){
+			if(!loaded)
+			{
+				// Loading the countries and the flags once the sliding panel is shown:
+				panel.load('../templates/users_online.php');
+				loaded=true;
+			}
+		});
+	}).bind('close',function(){
+        open = false;
+        $('.arrow').css("-webkit-transform","rotateZ(0deg)");
+		panel.slideUp();
+	});
+});
