@@ -1,7 +1,7 @@
 var app                 = require('http').createServer(handler),
-    io                  = require('socket.io').listen(app),
+    io                  = require('/Applications/MAMP/htdocs/snake/js/node_modules/socket.io/lib/socket.io.js').listen(app),
     fs                  = require('fs'),
-    mysql               = require('mysql'),
+    mysql               = require('/Applications/MAMP/htdocs/snake/js/node_modules/mysql'),
     connectionsArray    = [],
     connection          = mysql.createConnection({
         host        : 'localhost',
