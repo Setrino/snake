@@ -29,6 +29,8 @@ if($_SESSION['id'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']
 
 if(isset($_GET['logoff']))
 {
+    mysql_query("UPDATE online SET status=0 WHERE id='".$_SESSION['id']."'");
+    mysql_query("UPDATE online SET last_on=NOW() WHERE id='".$_SESSION['id']."'");
 	$_SESSION = array();
 	session_destroy();
 	
@@ -190,6 +192,7 @@ if($_SESSION['msg'])
 
     <title>Snake MMO</title>
 
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
     <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../css/game.css" media="screen"/>
     <script lang="javascript" src="../js/jquery-1.9.1.min.js"></script>
@@ -200,7 +203,8 @@ if($_SESSION['msg'])
         <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
     <![endif]-->
     
-    <script src="../js/slide.js" type="text/javascript"></script>
+    <script type="text/javascript" src="../js/slide.js"></script>
+    <script type="text/javascript" src="../js/widget.js"></script>
     
     <?php echo $script; ?>
 </head>
@@ -336,6 +340,13 @@ if($_SESSION['msg'])
       <div class="container tutorial-info">
       Demo by Setrino&copy; 2013 </div>
     </div>
+</div>
+
+<div class="onlineWidget">
+	<div class="panel"><img class="preloader" src="../images/preloader.gif" alt="Loading.." width="22" height="22" /></div>
+	<div class="count"></div>
+    <div class="label">online</div>
+    <div class="arrow"></div>
 </div>
 
 </body>
