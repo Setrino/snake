@@ -35,7 +35,7 @@ if($_POST['submit']=='Register')
     $_POST['email'] = mysql_real_escape_string($_POST['email']);
     $_POST['username'] = mysql_real_escape_string($_POST['username']);
 
-    if(strlen($_POST['username'])<4 || strlen($_POST['username'])>32)
+    if(strlen($_POST['username'])<3 || strlen($_POST['username'])>32)
     {
         $err[]='Your username must be between 3 and 32 characters!';
         $_SESSION['email'] = $_POST['email'];
@@ -131,20 +131,21 @@ if($_SESSION['msg'])
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>A Cool Login System With PHP MySQL &amp jQuery | Tutorialzine demo</title>
+    <title></title>
 
-    <link rel="stylesheet" type="text/css" href="demo.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="login_panel/css/slide.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/game.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/check.js"></script>
 
     <!-- PNG FIX for IE6 -->
     <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
     <!--[if lte IE 6]>
-    <script type="text/javascript" src="login_panel/js/pngfix/supersleight-min.js"></script>
+    <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
     <![endif]-->
 
-    <script src="login_panel/js/slide.js" type="text/javascript"></script>
+    <script src="../js/slide.js" type="text/javascript"></script>
 
     <?php echo $script; ?>
 </head>
@@ -152,7 +153,7 @@ if($_SESSION['msg'])
 <body>
     <div class="left right">
         <!-- Register Form -->
-        <form action="" method="post">
+        <form action="" id="reg_form" method="post">
             <h1>Not a member yet? Sign Up!</h1>
 
             <?php
@@ -169,18 +170,25 @@ if($_SESSION['msg'])
                 unset($_SESSION['msg']['reg-success']);
             }
             ?>
+                <span><div><label class="grey" for="username">Username:</label>
+                <input class="field" type="text" name="username" id="username" value="<?php if($_SESSION['nick'])
+                {echo $_SESSION['nick']; unset($_SESSION['nick']);} ?>" size="23" />
+                </div>
+                <div id="status" class="status"></div></span>
 
-            <label class="grey" for="username">Username:</label>
-            <input class="field" type="text" name="username" id="username" value="<?php if($_SESSION['nick'])
-            {echo $_SESSION['nick']; unset($_SESSION['nick']);} ?>" size="23" />
-            <label class="grey" for="password">Password:</label>
-            <input class="field" type="password" name="password" id="password" value="" size="23" />
-            <label class="grey" for="email">Email:</label>
-            <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
-            {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" size="23" />
-            <input type="submit" name="submit" value="Register" class="bt_register" />
+                <div><label class="grey" for="password">Password:</label>
+                <input class="field" type="password" name="password" id="password" value="" size="23" />
+                </div>
+                <div id="status_p" class="status"></div>
+
+                <label class="grey" for="email">Email:</label>
+                <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
+                {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" size="23" />
+                <div id="status_e" class="status"></div>
+
+                <input type="submit" name="submit" value="Register" class="bt_register"/>
+                <div id="status_r" class="status"></div>
         </form>
-
             <a href="index.php">Return to main page</a>
     </div>
 </body>
