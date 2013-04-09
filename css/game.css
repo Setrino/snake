@@ -147,6 +147,50 @@ a:hover{
     top: 0px;
 }
 
+.pvpNumb{
+
+    display: inline;
+    margin: 6px;
+    font-size: 15px;
+    width: 50px;
+    height: 50px;
+    background: white;
+    filter: alpha(opacity = 60);
+    -moz-box-shadow: 0px 2px 6px #000000;
+    -webkit-box-shadow: 0px 2px 6px #000000;
+    box-shadow: 0px 2px 6px #000000;
+    filter: progid:DXImageTransform.Microsoft.Shadow(strength = 2, direction = 180, color = '#000000');
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(strength = 2, Direction = 180, Color = '#000000')";
+}
+
+.pvpHJ{
+    width: 100px;
+    height: 100px;
+    display: inline;
+    margin-left: 6px;
+    margin-right: 6px;
+    margin-top: 1px;
+    font-size: 30px;
+    background: white;
+    -moz-box-shadow: 0px 2px 6px #000000;
+    -webkit-box-shadow: 0px 2px 6px #000000;
+    box-shadow: 0px 2px 6px #000000;
+    filter: progid:DXImageTransform.Microsoft.Shadow(strength = 2, direction = 180, color = '#000000');
+    -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(strength = 2, Direction = 180, Color = '#000000')";
+}
+
+.noGames{
+    margin: 0 auto;
+    color: #777777;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.noGames td{
+    padding-left: 25px;
+    padding-right: 25px;
+}
+
 #pvp{
     width: 100px;
     height: 100px;

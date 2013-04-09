@@ -204,7 +204,8 @@ if($_SESSION['msg'])
     <![endif]-->
     
     <script type="text/javascript" src="../js/slide.js"></script>
-    <script type="text/javascript" src="../js/widget.js"></script>
+    <script type="text/javascript" src="../js/online_widget.js"></script>
+    <script type="text/javascript" src="../js/pvp_requests.js"></script>
     
     <?php echo $script; ?>
 </head>

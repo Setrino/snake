@@ -808,7 +808,9 @@ function alignLaunchLink(){
 
 function pvp(){
 
-    $('.info').html('The PvP is not yet available');
+    //$('.info').html('The PvP is not yet available');
+    $('#play').html('<span><input type="button" value="Host" onclick="host()" class="pvpHJ"></span>' +
+        '<span><input type="button" value="Join" onclick="join()" class="pvpHJ"></span>');
 }
 
 function pvc(){
@@ -818,6 +820,40 @@ function pvc(){
     restart();
     doOverlayClose();
     startGame = false;
+}
+
+function setupPvP(){
+
+    $('#play').html('<span><input type="button" value="1v1" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
+        '<span><input type="button" value="2v2" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
+        '<span><input type="button" value="3v3" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
+        '<span><input type="button" value="4v4" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
+        '<p class="info"></p>');
+}
+
+function host(){
+
+    setupPvP();
+}
+
+function join(){
+
+    setupPvP();
+    currentPvP();
+}
+
+function pvpNumber(number){
+
+    switch(number){
+        case '1v1':
+            break;
+        case '2v2':
+            break;
+        case '3v3':
+            break;
+        case '4v4':
+            break;
+    }
 }
 
 function doOverlayOpen() {

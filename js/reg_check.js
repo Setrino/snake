@@ -9,32 +9,31 @@ var usr = $("#username").val();
 
 if(usr.length > 3)
 {
-    $("#status").html('<img src="../images/preloader.gif" align="absmiddle">&nbsp;Checking availability...');
+        $("#status").html('<img src="../images/preloader.gif" align="absmiddle">&nbsp;Checking availability...');
 
-    $.ajax({  
-    type: "POST",  
-    url: "../templates/check_user.php",
-    data: "username="+ usr,  
-    success: function(msg){  
-   
-   $("#status").ajaxComplete(function(event, request, settings){ 
+        $.ajax({
+        type: "POST",
+        url: "../templates/check_user.php",
+        data: "username="+ usr,
+        success: function(msg){
 
-	if(msg == 'OK')
-	{ 
-        $("#username").removeClass('object_error'); // if necessary
-		$("#username").addClass("object_ok");
-		$(this).html('&nbsp;<img src="../images/tick.gif" align="absmiddle">');
-	}  
-	else  
-	{  
-		$("#username").removeClass('object_ok'); // if necessary
-		$("#username").addClass("object_error");
-		$(this).html(msg);
-	}    
-   });
- }    
-  }); 
+           $("#status").ajaxComplete(function(event, request, settings){
 
+                if(msg == 'OK')
+                {
+                    $("#username").removeClass('object_error'); // if necessary
+                    $("#username").addClass("object_ok");
+                    $(this).html('&nbsp;<img src="../images/tick.gif" align="absmiddle">');
+                }
+                else
+                {
+                    $("#username").removeClass('object_ok'); // if necessary
+                    $("#username").addClass("object_error");
+                    $(this).html(msg);
+                }
+           });
+        }
+    });
 }
 else
 	{
@@ -42,7 +41,6 @@ else
 	$("#username").removeClass('object_ok'); // if necessary
 	$("#username").addClass("object_error");
 	}
-
 });
 
 $("#password").change(function(){
