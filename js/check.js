@@ -116,14 +116,14 @@ $("#email").change(function() {
             });
     });
 
-    document.getElementById('reg_form').submit = function(){
+    document.getElementById('reg_form').onsubmit = function(){
 
        if($("#status").html().indexOf("tick") !== -1
             && $("#status_p").html().indexOf("tick") !== -1
                 && $("#status_e").html().indexOf("tick") !== -1){
            return true;
        }else{
-            $("#status_r").html("The registration form is not complete").addClass("err");
+            $("#status_r").html("The registration form is not complete").addClass("err").show().fadeOut(1000);
             return false; //allow the submission to go through
        }
     }
