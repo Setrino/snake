@@ -40,4 +40,62 @@ if(isset($_POST['join'])){
         echo 'ERROR';
     }
 }
+
+/*
+ * type - 1v1, 2v2, 3v3, 4v4
+ * lp - localPlayer nick
+ * Get the user details from the users database (color, size)
+ * Get all the current pvp games that the user can join which are in waiting state
+ * Find the optimal game for you and join it
+ */
+if(isset($_POST['type']) && isset($_POST['lP'])){
+
+    $type = $_POST['type'];
+    $nick = $_POST['lP'];
+    $color = '';
+    $size = '';
+
+    $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
+
+    if($user_data){
+
+        $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
+        $color = $u_rows['color'];
+        $size = $u_rows['size'];
+
+
+    $pvpRooms = mysql_query("SELECT name FROM rooms WHERE pvpNo='".$type."' && state=0") or die(mysql_error());
+
+        if($pvpRooms){
+
+            $p_no_rows = mysql_num_rows($pvpRooms);
+
+            for($i = 0; $i < $p_no_rows; $i++){
+
+                $room = mysql_fetch_row($pvpRooms);
+
+                $pvpRoom = mysql_query('SELECT * FROM '.$room[0]) or die(mysql_error());
+
+                if($pvpRoom){
+
+                    $r_rows = mysql_fetch_array($pvpRoom, MYSQL_BOTH);
+
+                    foreach($r_rows as $r_row){
+
+                        if(abs($r_row['size'] - $size) < 3){
+                            echo $room[0];
+                            break;
+                        }
+                    }
+                }else{
+                    echo 'ERROR';
+                }
+            }
+        }else{
+            echo 'ERROR';
+        }
+    }else{
+        echo 'ERROR';
+    }
+}
 ?>

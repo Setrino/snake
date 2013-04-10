@@ -324,7 +324,8 @@ if($_SESSION['msg'])
                   <a href="#" class="closeLink"><img src="../images/icon-exit.png"></a>
                   <!--normal content-->
                   <div id="play" class="play">
-                      <span><input type="button" value="" onclick="pvp()" id="pvp"></span>
+                      <span><input type="button" value="" onclick="pvp('<?php echo $_SESSION['nick']
+                          ? $_SESSION['nick'] : null ?>')" id="pvp"></span>
                       &nbsp
                       <span><input type="button" value="" onclick="pvc()" id="pvc"></span>
                       <p class="info"></p>

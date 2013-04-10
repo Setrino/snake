@@ -23,6 +23,7 @@ var width = 500,
 //and two-dimensional graphic context of the
 //canvas, the only one supported by all 
 //browsers for now
+  localPlayer = null;
 
 c.width = width;
 c.height = height;
@@ -806,7 +807,9 @@ function alignLaunchLink(){
     });
 }
 
-function pvp(){
+function pvp(player){
+
+    localPlayer = player;
 
     //$('.info').html('The PvP is not yet available');
     $('#play').html('<span><input type="button" value="Host" onclick="host()" class="pvpHJ"></span>' +
@@ -846,6 +849,7 @@ function pvpNumber(number){
 
     switch(number){
         case '1v1':
+            joinPvP(localPlayer, 1);
             break;
         case '2v2':
             break;
