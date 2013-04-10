@@ -53,3 +53,29 @@ function joinPvP(lP, type){
         }
     });
 }
+
+function hostPvP(lP, type){
+
+    $('.info').html('<img src="../images/preloader.gif" align="absmiddle">&nbsp;Creating a ' +
+        type + 'v' + type + ' game...');
+
+    $.ajax({
+        type: "GET",
+        url: "../templates/pvp_requests.php",
+        data: {"type": type, "player" : lP},
+        success: function(msg){
+
+            if(msg == 'ERROR')
+            {
+                $('.info').html('<span>Failed to join a PvP Game</span>');
+            }
+            else
+            {
+                $('.info').html(msg);
+            }
+        },
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert(textStatus+" - "+errorThrown);
+        }
+    });
+}

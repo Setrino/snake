@@ -98,4 +98,31 @@ if(isset($_POST['type']) && isset($_POST['lP'])){
         echo 'ERROR';
     }
 }
+
+/*
+ * type - 1v1, 2v2, 3v3, 4v4
+ * lp - localPlayer nick
+ * Get the user details from the users database (color, size)
+ * Get all the current pvp games that the user can join which are in waiting state
+ * Find the optimal game for you and join it
+ */
+if(isset($_POST['type']) && isset($_POST['player'])){
+
+    $type = $_POST['type'];
+    $nick = $_POST['player'];
+    $color = '';
+    $size = '';
+
+    $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
+    $roomID = uniqid('pvp_');
+
+    echo $roomID;
+
+    if($user_data){
+
+        $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
+        $color = $u_rows['color'];
+        $size = $u_rows['size'];
+    }
+}
 ?>

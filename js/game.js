@@ -825,37 +825,42 @@ function pvc(){
     startGame = false;
 }
 
-function setupPvP(){
+function setupPvP(callback){
 
-    $('#play').html('<span><input type="button" value="1v1" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
-        '<span><input type="button" value="2v2" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
-        '<span><input type="button" value="3v3" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
-        '<span><input type="button" value="4v4" onclick="pvpNumber(this.value)" class="pvpNumb"></span>' +
+    $('#play').html('<span><input type="button" value="1v1" class="pvpNumb"></span>' +
+        '<span><input type="button" value="2v2" class="pvpNumb"></span>' +
+        '<span><input type="button" value="3v3" class="pvpNumb"></span>' +
+        '<span><input type="button" value="4v4" class="pvpNumb"></span>' +
         '<p class="info"></p>');
+
+    $('.pvpNumb').on('click', function(){ pvpNumber(this.value, callback)});
 }
 
 function host(){
 
-    setupPvP();
+    setupPvP(hostPvP);
 }
 
 function join(){
 
-    setupPvP();
+    setupPvP(joinPvP);
     currentPvP();
 }
 
-function pvpNumber(number){
+function pvpNumber(number, callback){
 
     switch(number){
         case '1v1':
-            joinPvP(localPlayer, 1);
+            callback(localPlayer, 1);
             break;
         case '2v2':
+            callback(localPlayer, 2);
             break;
         case '3v3':
+            callback(localPlayer, 3);
             break;
         case '4v4':
+            callback(localPlayer, 4);
             break;
     }
 }
