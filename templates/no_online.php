@@ -31,7 +31,7 @@ if($_SESSION['id']){
 //mysql_query("DELETE FROM tz_who_is_online WHERE dt<SUBTIME(NOW(),'0 0:10:0')");
 
 // Counting all the online visitors:
-list($totalOnline) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM online WHERE status=1"));
+list($totalOnline) = mysql_fetch_array(mysql_query("SELECT COUNT(*) FROM online WHERE status=1 || status=2"));
 
 // Outputting the number as plain text:
 echo $totalOnline;

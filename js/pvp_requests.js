@@ -60,7 +60,7 @@ function hostPvP(lP, type){
         type + 'v' + type + ' game...');
 
     $.ajax({
-        type: "GET",
+        type: "POST",
         url: "../templates/pvp_requests.php",
         data: {"type": type, "player" : lP},
         success: function(msg){
@@ -71,7 +71,7 @@ function hostPvP(lP, type){
             }
             else
             {
-                $('.info').html(msg);
+                $('.info').html('Room ID is ' + msg);
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {

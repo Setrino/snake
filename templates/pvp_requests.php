@@ -114,15 +114,25 @@ if(isset($_POST['type']) && isset($_POST['player'])){
     $size = '';
 
     $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
-    $roomID = uniqid('pvp_');
-
-    echo $roomID;
+    $roomID = uniqid();
 
     if($user_data){
 
         $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
         $color = $u_rows['color'];
         $size = $u_rows['size'];
+
+        $pvpRooms = mysql_query("INSERT INTO rooms(name, pvpNo, width, height, state) VALUES('".$roomID."', '".$type."', 500, 320, 0)") or die(mysql_error());
+
+        if($pvpRooms){
+
+         echo $roomID;
+
+        }else{
+            echo 'ERROR';
+        }
+    }else{
+        echo 'ERROR';
     }
 }
 ?>
