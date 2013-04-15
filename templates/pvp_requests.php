@@ -42,6 +42,7 @@ if(isset($_POST['join'])){
 }
 
 /*
+ * JOIN
  * type - 1v1, 2v2, 3v3, 4v4
  * lp - localPlayer nick
  * Get the user details from the users database (color, size)
@@ -100,6 +101,7 @@ if(isset($_POST['type']) && isset($_POST['lP'])){
 }
 
 /*
+ * HOST
  * type - 1v1, 2v2, 3v3, 4v4
  * lp - localPlayer nick
  * Get the user details from the users database (color, size)
@@ -122,12 +124,26 @@ if(isset($_POST['type']) && isset($_POST['player'])){
         $color = $u_rows['color'];
         $size = $u_rows['size'];
 
-        $pvpRooms = mysql_query("INSERT INTO rooms(name, pvpNo, width, height, state) VALUES('".$roomID."', '".$type."', 500, 320, 0)") or die(mysql_error());
+        $pvpRooms = mysql_query("INSERT INTO rooms(name, pvpNo, width, height, state) VALUES('".$roomID."',
+         '".$type."', 500, 320, 0)") or die(mysql_error());
 
         if($pvpRooms){
 
-         echo $roomID;
+        $pvp_room = mysql_query("CREATE TABLE $roomID(nick VARCHAR (32) NOT NULL, team INT(1) NOT NULL, number INT(1)
+         NOT NULL, status INT(1) NOT NULL DEFAULT 0, color VARCHAR(10) NOT NULL, orgX INT(3) NOT NULL, orgY INT(3)
+          NOT NULL, size INT(2) NOT NULL, orgDir INT(1) NOT NULL DEFAULT 0,
+           UNIQUE KEY(nick)) engine myisam") or die (mysql_error());
 
+            if($pvp_room){
+
+                $add_User = mysql_query("INSERT INTO $roomID VALUES('$nick', 0, 4, 0, '$color', 4, 14, '$size', 0)")
+                    or die(mysql_error());
+
+                echo $roomID;
+
+            }else{
+                echo 'ERROR';
+            }
         }else{
             echo 'ERROR';
         }

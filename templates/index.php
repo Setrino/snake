@@ -293,7 +293,7 @@ if($_SESSION['msg'])
 	        <li>Hello <?php echo $_SESSION['nick'] ? $_SESSION['nick'] : 'Guest';?>!</li>
 			<li class="sep">|</li>
 			<li id="toggle">
-				<a id="open" class="open" href="#"><?php echo $_SESSION['id']?'Open Panel':'Log In | Register';?></a>
+				<a id="open" class="open" href="#"><?php echo $_SESSION['nick']?'Open Panel':'Log In | Register';?></a>
 				<a id="close" style="display: none;" class="close" href="#">Close Panel</a>			
 			</li>
 	    	<li class="right">&nbsp;</li>

@@ -71,7 +71,9 @@ function hostPvP(lP, type){
             }
             else
             {
-                $('.info').html('Room ID is ' + msg);
+                $('.info').html('<div>Room ID is ' + msg +
+                    '</div><a href="../pvp/'+ msg +'">Enter</a>');
+                //window.location.href = '../pvp/' + msg;
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {
