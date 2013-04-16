@@ -16,8 +16,9 @@ $getNick = '';
 $query = '';
 
 if(isset($_GET['name'])){
-    $getNick = $_GET['name'];
-    $query = mysql_query("SELECT * from rooms WHERE name='$getNick'") or die(mysql_error());
+    $getTable = $_GET['name'];
+    $getNick = $_SESSION['nick'];
+    $query = mysql_query("SELECT * from rooms WHERE name='$getTable'") or die(mysql_error());
 }
 /*else{
     $query = getQuery(explode("/",$_SERVER['REQUEST_URI'])[3]);
@@ -33,12 +34,27 @@ $width = $array['width'];
 ?>
 
 
-<head>
 
+<head>
+    <title>A multiplayer game built using HTML5 canvas and WebSockets</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/game.css">
 </head>
 
 <body>
+<canvas id="gameCanvas"></canvas>
+<script src="../js/jquery-1.9.1.min.js"></script>
+<script src="http://localhost:8000/socket.io/socket.io.js"></script>
+<script src="../js/client/requestAnimationFrame.js"></script>
+<script src="../js/client/Keys.js"></script>
+<script src="../js/client/Snake.js"></script>
+<script src="../js/client/client.js"></script>
+<script>
+    // Initialise the game
+    init('<?php echo $getTable; ?>', '<?php echo $getNick; ?>');
+    animate();
+</script>
 
-<?php echo $width; ?>
-
+<div id="status"></div>
 </body>
