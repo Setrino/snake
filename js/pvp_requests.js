@@ -43,9 +43,13 @@ function joinPvP(lP, type){
             {
                 $('.info').html('<span>Failed to join a PvP Game</span>');
             }
-            else
+            else if(msg != '')
             {
-                $('.info').html(msg);
+                $('.info').html('<div>Join Room ' + msg +
+                    '</div><a href="../pvp/'+ msg +'">Enter</a>');
+            }else{
+                $('.info').html('<div>No room found</div><input type="button" value="Refresh" class="refresh">');
+                $('.refresh').on('click', currentPvP);
             }
         },
         error: function(XMLHttpRequest, textStatus, errorThrown) {

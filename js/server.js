@@ -61,8 +61,6 @@ var setEventHandlers = function() {
 // New socket connection
 function onSocketConnection(client) {
 
-    client.join('group');
-
     util.log("New player has connected: " + client.id);
 
 	// Listen for client disconnected
@@ -149,6 +147,8 @@ function onMovePlayer(data) {
 };
 
 function onRequestData(data){
+
+    data.join(data.sessionRoom);
 
     that = this;
 

@@ -70,28 +70,31 @@ if(isset($_POST['type']) && isset($_POST['lP'])){
         if($pvpRooms){
 
             $p_no_rows = mysql_num_rows($pvpRooms);
-
+                $selected = '';
             for($i = 0; $i < $p_no_rows; $i++){
 
                 $room = mysql_fetch_row($pvpRooms);
 
-                $pvpRoom = mysql_query('SELECT * FROM '.$room[0]) or die(mysql_error());
+                $pvpRoom = mysql_query("SELECT * FROM $room[0]") or die(mysql_error());
 
                 if($pvpRoom){
 
-                    $r_rows = mysql_fetch_array($pvpRoom, MYSQL_BOTH);
+                    $room_player_rows = mysql_num_rows($pvpRoom);
 
-                    foreach($r_rows as $r_row){
+                    for($j = 0; $j < $room_player_rows; $j++){
 
-                        if(abs($r_row['size'] - $size) < 3){
-                            echo $room[0];
-                            break;
-                        }
+                        $player = mysql_fetch_row($pvpRoom);
+
+                            if(abs($player[7] - $size) < 3){
+                                $selected = $room[0];
+                                break;
+                            }
                     }
                 }else{
                     echo 'ERROR';
                 }
             }
+            echo $selected;
         }else{
             echo 'ERROR';
         }
