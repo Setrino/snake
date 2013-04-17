@@ -14,26 +14,27 @@ session_start();
 
 $getNick = '';
 $query = '';
+$err = array();
 
-if(isset($_GET['name'])){
+if(isset($_GET['name']) && $_SESSION['id']){
     $getTable = $_GET['name'];
     $getNick = $_SESSION['nick'];
-    $query = mysql_query("SELECT * from rooms WHERE name='$getTable'") or die(mysql_error());
+    $query = mysql_query("SELECT * from $getTable WHERE nick='$getNick'") or die(mysql_error());
+    if(!mysql_fetch_array($query))
+        $err[] = 'You are not part of this room';
+}else{
+        $err[] = 'You are not logged in';
 }
 /*else{
     $query = getQuery(explode("/",$_SERVER['REQUEST_URI'])[3]);
 }*/
-$num_rows = mysql_num_rows($query);
-$array = mysql_fetch_array($query, MYSQL_ASSOC);
-$width = $array['width'];
 
 /*if($num_rows == 0){
     header("Location: 404");
 }*/
 
+if(!count($err)){
 ?>
-
-
 
 <head>
     <title>A multiplayer game built using HTML5 canvas and WebSockets</title>
@@ -58,3 +59,35 @@ $width = $array['width'];
 
 <div id="status"></div>
 </body>
+
+<?php }else{ ?>
+<head>
+    <title>A multiplayer game built using HTML5 canvas and WebSockets</title>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="../css/reset.css">
+    <link rel="stylesheet" href="../css/game.css">
+    <script src="../js/jquery-1.9.1.min.js"></script>
+    <!-- PNG FIX for IE6 -->
+    <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
+    <!--[if lte IE 6]>
+    <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
+    <![endif]-->
+    <script src="../js/overlay_box.js"></script>
+</head>
+<body>
+    <!-- The dark background -->
+    <div class="bgCover">&nbsp;</div>
+    <!-- overlay box -->
+    <div class="overlayBox">
+        <div class="overlayContent">
+            <!--normal content-->
+            <div id="error" class="err"></div>
+            <div class="home"><a href="../templates/index.php">Home</a></div>
+        </div>
+    </div>
+    <script> openOverlay('<?php echo implode('<br />', $err) ?>');
+            $('.bgCover').css({opacity:0}).animate( {opacity:0.5, backgroundColor:'#000'} );
+    </script>
+</body>
+
+<?php }?>

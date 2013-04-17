@@ -200,7 +200,7 @@ if($_SESSION['msg'])
     <!-- PNG FIX for IE6 -->
     <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
     <!--[if lte IE 6]>
-        <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
+    <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
     <![endif]-->
     
     <script type="text/javascript" src="../js/slide.js"></script>

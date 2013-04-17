@@ -116,7 +116,7 @@ if(isset($_POST['type']) && isset($_POST['player'])){
     $size = '';
 
     $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
-    $roomID = uniqid();
+    $roomID = uniqid('p');
 
     if($user_data){
 

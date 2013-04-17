@@ -27,7 +27,6 @@ function init(table, p_name) {
 	// Declare the canvas and rendering context
     mysql_table = table;
     sessionUser = p_name;
-    alert(mysql_table);
 	canvas = document.getElementById("gameCanvas");
 	ctx = canvas.getContext("2d");
 	// Initialise keyboard controls

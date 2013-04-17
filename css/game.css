@@ -215,3 +215,7 @@ a:hover{
     filter: progid:DXImageTransform.Microsoft.Shadow(strength = 2, direction = 180, color = '#000000');
     -ms-filter: "progid:DXImageTransform.Microsoft.Shadow(strength = 2, Direction = 180, Color = '#000000')";
 }
+
+#error{
+    font-size: 30px;
+}
