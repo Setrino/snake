@@ -138,6 +138,7 @@ if(isset($_POST['type']) && isset($_POST['player'])){
 
                 $add_User = mysql_query("INSERT INTO $roomID VALUES('$nick', 0, 4, 0, '$color', 4, 14, '$size', 0)")
                     or die(mysql_error());
+                            mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
 
                 echo $roomID;
 

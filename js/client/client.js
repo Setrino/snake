@@ -16,7 +16,7 @@ var canvas,			// Canvas DOM element
     noOfx,
     noOfy,
     pvpNo,
-    mysql_table,    // MySQL table of the current game
+    sessionRoom,    // MySQL table of the current game
     sessionUser;
 
 
@@ -25,7 +25,7 @@ var canvas,			// Canvas DOM element
 **************************************************/
 function init(table, p_name) {
 	// Declare the canvas and rendering context
-    mysql_table = table;
+    sessionRoom = table;
     sessionUser = p_name;
 	canvas = document.getElementById("gameCanvas");
 	ctx = canvas.getContext("2d");
@@ -107,7 +107,7 @@ function onResize(e) {
 function onSocketConnected() {
 	console.log("Connected to socket server");
 
-    socket.emit("request data", {sessionUser : sessionUser});
+    socket.emit("request data", {sessionUser : sessionUser, sessionRoom: sessionRoom});
 
 	// Send local player data to the game server
 };

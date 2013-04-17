@@ -152,7 +152,7 @@ function onRequestData(data){
 
     that = this;
 
-    requestData(data.sessionUser, function(room, value){
+    requestData(data.sessionUser, data.sessionRoom, function(room, value){
 
         if(temp) {
             that.emit("init player", {size: value['size'], orgX: value['orgX'], orgY: value['orgY'],
@@ -216,7 +216,7 @@ function updateStep(){
 init();
 
 //Retrieve user details
-function requestData(user, callback){
+function requestData(user, roomName, callback){
 
     mysql.query('SELECT room FROM online WHERE nick=?', [user], function(err, results){
 
@@ -224,29 +224,32 @@ function requestData(user, callback){
 
             row = results[0];
 
-            if(row['room'] != null){
-                mysql.query('SELECT * FROM rooms WHERE name=?',[row['room']], function(err, results){
-                    if(!err){
+            if(row['room'] == roomName){
+                if(row['room'] != null){
+                    mysql.query('SELECT * FROM rooms WHERE name=?',[row['room']], function(err, results){
+                        if(!err){
 
-                        pvpNo = results[0]['pvpNo'];
-                        room = results[0];
+                            pvpNo = results[0]['pvpNo'];
+                            room = results[0];
 
-                        mysql.query('SELECT * FROM ' + row['room'].toString() +
-                            ' WHERE nick=?',[user], function(err, results){
-                            if(!err){
-                                //Room information, User data in the room
-                                callback(room, results[0]);
-                            }else{
-                                throw err;
-                            }
-                        });
-                    }else{
-                        throw err;
-                    }
-                });
+                            mysql.query('SELECT * FROM ' + row['room'].toString() +
+                                ' WHERE nick=?',[user], function(err, results){
+                                if(!err){
+                                    //Room information, User data in the room
+                                    callback(room, results[0]);
+                                }else{
+                                    throw err;
+                                }
+                            });
+                        }else{
+                            throw err;
+                        }
+                    });
+                }
+            }else{
+                throw err;
             }
-        }
-        else {
+        }else {
             throw err;
         }
     });

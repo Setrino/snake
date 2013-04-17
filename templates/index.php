@@ -22,7 +22,7 @@ if($_SESSION['id'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']
 
 	$_SESSION = array();
 	session_destroy();
-	
+
 	// Destroy the session
 }
 
@@ -33,7 +33,7 @@ if(isset($_GET['logoff']))
     mysql_query("UPDATE online SET last_on=NOW() WHERE id='".$_SESSION['id']."'");
 	$_SESSION = array();
 	session_destroy();
-	
+
 	header("Location: index.php");
 	exit;
 }
@@ -41,20 +41,20 @@ if(isset($_GET['logoff']))
 if($_POST['submit']=='Login')
 {
 	// Checking whether the Login form has been submitted
-	
+
 	$err = array();
 	// Will hold our errors
-	
-	
+
+
 	if(!$_POST['username'] || !$_POST['password'])
 		$err[] = 'All the fields must be filled in!';
-	
+
 	if(!count($err))
 	{
 		$_POST['username'] = mysql_real_escape_string($_POST['username']);
 		$_POST['password'] = mysql_real_escape_string($_POST['password']);
 		$_POST['rememberMe'] = (int)$_POST['rememberMe'];
-		
+
 		// Escaping all input data
 
 		$row = mysql_fetch_assoc(mysql_query("SELECT id,nick FROM passwords WHERE nick='{$_POST['username']}' AND pass='{$_POST['password']}'"));
@@ -62,18 +62,18 @@ if($_POST['submit']=='Login')
 		if($row['nick'])
 		{
 			// If everything is OK login
-			
+
 			$_SESSION['nick']=$row['nick'];
 			$_SESSION['id'] = $row['id'];
 			$_SESSION['rememberMe'] = $_POST['rememberMe'];
-			
+
 			// Store some data in the session
-			
+
 			setcookie('tzRemember',$_POST['rememberMe']);
 		}
 		else $err[]= mysql_error();
 	}
-	
+
 	if($err)
 	$_SESSION['msg']['login-err'] = implode('<br />',$err);
 	// Save the error messages in the session
@@ -84,24 +84,24 @@ if($_POST['submit']=='Login')
 else if($_POST['submit']=='Register')
 {
 	// If the Register form has been submitted
-	
+
 	$err = array();
 
     $_POST['email'] = mysql_real_escape_string($_POST['email']);
     $_POST['username'] = mysql_real_escape_string($_POST['username']);
-	
+
 	if(strlen($_POST['username'])<4 || strlen($_POST['username'])>32)
 	{
 		$err[]='Your username must be between 3 and 32 characters!';
         $_SESSION['email'] = $_POST['email'];
 	}
-	
+
 	if(preg_match('/[^a-z0-9\-\_\.]+/i',$_POST['username']))
 	{
 		$err[]='Your username contains invalid characters!';
         $_SESSION['email'] = $_POST['email'];
 	}
-	
+
 	if(!checkEmail($_POST['email']))
 	{
 		$err[]='Your email is not valid!';
@@ -119,11 +119,11 @@ else if($_POST['submit']=='Register')
         $_SESSION['nick'] = $_POST['username'];
         $_SESSION['email'] = $_POST['email'];
     }
-	
+
 	if(!count($err))
 	{
 		// If there are no errors
-		
+
 		//$pass = substr(md5($_SERVER['REMOTE_ADDR'].microtime().rand(1,100000)),0,6);
 		// Generate a random password
 		$_POST['password'] = mysql_real_escape_string($_POST['password']);
@@ -135,13 +135,13 @@ else if($_POST['submit']=='Register')
 							'".$_POST['email']."',
 							'".$_SERVER['REMOTE_ADDR']."',
 							NOW())");
-		
+
 		mysql_query("	INSERT INTO passwords(nick,pass)
 						VALUES(
 							'".$_POST['username']."',
 							'".$_POST['password']."'
 						)");
-		
+
 		if(mysql_affected_rows($link)==1)
 		{
 			send_mail(	'info@fkdn-lab.com',
@@ -157,8 +157,8 @@ else if($_POST['submit']=='Register')
 	if(count($err))
 	{
 		$_SESSION['msg']['reg-err'] = implode('<br />',$err);
-	}	
-	
+	}
+
 	header("Location: index.php");
 	exit;
 }
@@ -168,18 +168,18 @@ $script = '';
 if($_SESSION['msg'])
 {
 	// The script below shows the sliding panel on page load
-	
+
 	$script = '
 	<script type="text/javascript">
-	
+
 		$(function(){
-		
+
 			$("div#panel").show();
 			$("#toggle a").toggle();
 		});
-	
+
 	</script>';
-	
+
 }
 ?>
 

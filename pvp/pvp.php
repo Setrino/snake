@@ -19,8 +19,12 @@ $err = array();
 if(isset($_GET['name']) && $_SESSION['id']){
     $getTable = $_GET['name'];
     $getNick = $_SESSION['nick'];
-    $query = mysql_query("SELECT * from $getTable WHERE nick='$getNick'") or die(mysql_error());
-    if(!mysql_fetch_array($query))
+    $query = mysql_query("SELECT room from online WHERE nick='$getNick'") or die(mysql_error());
+    //$query = mysql_query("SELECT * from $getTable WHERE nick='$getNick'") or die(mysql_error());
+
+    $getRoom = mysql_fetch_array($query)['room'];
+
+    if(!$getRoom || $getRoom != $getTable)
         $err[] = 'You are not part of this room';
 }else{
         $err[] = 'You are not logged in';
@@ -61,20 +65,117 @@ if(!count($err)){
 </body>
 
 <?php }else{ ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>A multiplayer game built using HTML5 canvas and WebSockets</title>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="../css/reset.css">
-    <link rel="stylesheet" href="../css/game.css">
+    <link rel="stylesheet" type="text/css" href="../css/styles.css" />
+    <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/game.css" media="screen"/>
     <script src="../js/jquery-1.9.1.min.js"></script>
+
     <!-- PNG FIX for IE6 -->
     <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
     <!--[if lte IE 6]>
     <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="../js/slide.js"></script>
     <script src="../js/overlay_box.js"></script>
 </head>
 <body>
+
+<!-- Panel -->
+<div id="toppanel">
+    <div id="panel">
+        <div class="content clearfix">
+
+            <?php
+
+            if(!$_SESSION['id']):
+
+                ?>
+
+                <div class="left right">
+                    <!-- Login Form -->
+                    <form class="clearfix" action="" method="post">
+                        <h1>Member Login</h1>
+                        <?php
+
+                        if($_SESSION['msg']['login-err'])
+                        {
+                            echo '<div class="err">'.$_SESSION['msg']['login-err'].'</div>';
+                            unset($_SESSION['msg']['login-err']);
+                        }
+                        ?>
+
+                        <label class="grey" for="username">Username:</label>
+                        <input class="field" type="text" name="username" id="username" size="23" />
+                        <label class="grey" for="password">Password:</label>
+                        <input class="field" type="password" name="password" id="password" size="23" />
+                        <label><input name="rememberMe" id="rememberMe" type="checkbox" checked="checked" value="1" /> &nbsp;Remember me</label>
+                        <div class="clear"></div>
+
+                        <input type="submit" name="submit" value="Login" class="bt_login" />
+                    </form>
+                    <span class="forms">
+                        <a href="../templates/register.php">Register</a>
+                        &nbsp;&nbsp;&nbsp;
+                        <a href="../templates/forgot.php">Forgotten password</a>
+                    </span>
+                </div>
+
+                <div class="left">
+                    <h1>Welcome to Snake MMO</h1>
+                    <h2>Login if Member or Register</h2>
+                    <p class="grey">You are free to use this login and registration system in you sites!</p>
+                    <h2>A Big Thanks</h2>
+                    <p class="grey"></p>
+                </div>
+
+                <?php
+
+            else:
+
+                ?>
+
+                <div class="left">
+
+                    <h1>Members panel</h1>
+
+                    <p>You can put member-only data here</p>
+                    <a href="../templates/registered.php">View a special member page</a>
+                    <p>- or -</p>
+                    <a href="?logoff">Log off</a>
+
+                </div>
+
+                <div class="left right">
+                </div>
+
+                <?php
+            endif;
+            ?>
+        </div>
+    </div> <!-- /login -->
+
+    <!-- The tab on top -->
+    <div class="tab">
+        <ul class="login">
+            <li class="left">&nbsp;</li>
+            <li>Hello <?php echo $_SESSION['nick'] ? $_SESSION['nick'] : 'Guest';?>!</li>
+            <li class="sep">|</li>
+            <li id="toggle">
+                <a id="open" class="open" href="#"><?php echo $_SESSION['nick']?'Open Panel':'Log In | Register';?></a>
+                <a id="close" style="display: none;" class="close" href="#">Close Panel</a>
+            </li>
+            <li class="right">&nbsp;</li>
+        </ul>
+    </div> <!-- / top -->
+
+</div> <!--panel -->
+
+
     <!-- The dark background -->
     <div class="bgCover">&nbsp;</div>
     <!-- overlay box -->
