@@ -25,7 +25,7 @@ require "functions.php";
 // We don't want web bots accessing this page:
 if(is_bot()) die();
 
-// Selecting the top 15 countries with the most visitors:
+// Selecting the 15 player
 $counter = 0;
 $result = mysql_query("	SELECT nick,status
 						FROM online

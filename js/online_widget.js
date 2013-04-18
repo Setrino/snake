@@ -9,7 +9,7 @@ $(document).ready(function(){
 	// Loading the number of users online into the count div:
 	count.load("../templates/no_online.php");
 	
-	$('.onlineWidget').click(
+	$('.bottom_panel').click(
 		function(){
 			// Setting a custom 'open' event on the sliding panel:
             if(!open)
@@ -32,7 +32,7 @@ $(document).ready(function(){
 		panel.slideDown(function(){
 			if(!loaded)
 			{
-				// Loading the countries and the flags once the sliding panel is shown:
+				// Loading the users data
 				panel.load('../templates/users_online.php');
 				loaded=true;
 			}

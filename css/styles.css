@@ -26,6 +26,10 @@
 	text-shadow:0 2px 0 white;
 }
 
+.onlineWidget .bottom_panel{
+	height: 25px;
+}
+
 .onlineWidget:hover{
 	background-color:#fcfcfc;
 }

@@ -29,7 +29,7 @@ session_start();
     <?php
 	if($_SESSION['id'])
 	echo '<h1>Hello, '.$_SESSION['nick'].'! You are registered and logged in!</h1>';
-	else echo '<h1>Please, <a href="index.php">login</a> and come back later!</h1>';
+	else echo '<h1>Please, <a href="../templates/index.php">login</a> and come back later!</h1>';
     ?>
     </div>
     

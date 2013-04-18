@@ -144,7 +144,7 @@ if(!count($err)){
                     <h1>Members panel</h1>
 
                     <p>You can put member-only data here</p>
-                    <a href="../templates/registered.php">View a special member page</a>
+                    <a href="../profile/profile.php">View a special member page</a>
                     <p>- or -</p>
                     <a href="?logoff">Log off</a>
 

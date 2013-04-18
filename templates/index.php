@@ -4,16 +4,29 @@ define('INCLUDE_CHECK',true);
 
 require_once 'login.php';
 require 'functions.php';
-// Those two files can be included only if INCLUDE_CHECK is defined
 
-
-session_name('tzLogin');
 // Starting the session
+session_name('tzLogin');
 
-session_set_cookie_params(2*7*24*60*60);
 // Making the cookie live for 2 weeks
+session_set_cookie_params(2*7*24*60*60);
 
 session_start();
+
+if(isset($_SESSION['last_on']) && (time() - $_SESSION['last_on']) > 1800){
+    killSession();
+}
+$_SESSION['last_on'] = time();
+
+function killSession(){
+    //mysql_query("UPDATE online SET status=0, last_on=time(), room=null WHERE id='".$_SESSION['id']."'");
+    mysql_query("UPDATE online SET status=0, last_on=time() WHERE id='".$_SESSION['id']."'");
+    $_SESSION = array();
+    session_destroy();
+
+    header("Location: index.php");
+    exit;
+}
 
 if($_SESSION['id'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe'])
 {
@@ -26,16 +39,8 @@ if($_SESSION['id'] && !isset($_COOKIE['tzRemember']) && !$_SESSION['rememberMe']
 	// Destroy the session
 }
 
-
-if(isset($_GET['logoff']))
-{
-    mysql_query("UPDATE online SET status=0 WHERE id='".$_SESSION['id']."'");
-    mysql_query("UPDATE online SET last_on=NOW() WHERE id='".$_SESSION['id']."'");
-	$_SESSION = array();
-	session_destroy();
-
-	header("Location: index.php");
-	exit;
+if(isset($_GET['logoff'])){
+    killSession();
 }
 
 if($_POST['submit']=='Login')
@@ -57,21 +62,31 @@ if($_POST['submit']=='Login')
 
 		// Escaping all input data
 
-		$row = mysql_fetch_assoc(mysql_query("SELECT id,nick FROM passwords WHERE nick='{$_POST['username']}' AND pass='{$_POST['password']}'"));
+        $row = mysql_fetch_assoc(mysql_query("SELECT nick FROM users WHERE nick='{$_POST['username']}'"));
 
-		if($row['nick'])
-		{
-			// If everything is OK login
+        if(!$row['nick'])
+        {
+            $err[]= 'Such username does not exist';
+        }else{
+            $row = mysql_fetch_assoc(mysql_query("SELECT id,nick FROM passwords WHERE nick='{$_POST['username']}'
+             AND pass='{$_POST['password']}'"));
 
-			$_SESSION['nick']=$row['nick'];
-			$_SESSION['id'] = $row['id'];
-			$_SESSION['rememberMe'] = $_POST['rememberMe'];
+            if($row['nick'])
+            {
+                // If everything is OK login
 
-			// Store some data in the session
+                $_SESSION['nick']=$row['nick'];
+                $_SESSION['id'] = $row['id'];
+                $_SESSION['rememberMe'] = $_POST['rememberMe'];
+                $_SESSION['last_on'] = time();
 
-			setcookie('tzRemember',$_POST['rememberMe']);
-		}
-		else $err[]= mysql_error();
+                // Store some data in the session
+
+                setcookie('tzRemember',$_POST['rememberMe']);
+            }else{
+                $err[]= 'You have entered a wrong password';
+            }
+        }
 	}
 
 	if($err)
@@ -232,10 +247,10 @@ if($_SESSION['msg'])
 						if($_SESSION['msg']['login-err'])
 						{
 							echo '<div class="err">'.$_SESSION['msg']['login-err'].'</div>';
+                            echo '<script>$(document).ready(function(){$(\'#forms\').addClass("up_err");});</script>';
 							unset($_SESSION['msg']['login-err']);
 						}
 					?>
-					
 					<label class="grey" for="username">Username:</label>
 					<input class="field" type="text" name="username" id="username" size="23" />
 					<label class="grey" for="password">Password:</label>
@@ -245,11 +260,12 @@ if($_SESSION['msg'])
 
 					    <input type="submit" name="submit" value="Login" class="bt_login" />
 			</form>
-                    <span class="forms">
-                        <a href="register.php">Register</a>
-                        &nbsp;&nbsp;&nbsp;
-                        <a href="forgot.php">Forgotten password</a>
-                    </span>
+                    <table id="forms">
+                        <tr>
+                            <td class="form_register"><a href="register.php">Register</a></td>
+                            <td><a href="forgot.php">Forgotten password</a></td>
+                        </tr>
+                    </table>
 			</div>
 
             <div class="left">
@@ -267,14 +283,12 @@ if($_SESSION['msg'])
 			?>
             
             <div class="left">
-            
-            <h1>Members panel</h1>
-            
-            <p>You can put member-only data here</p>
-            <a href="registered.php">View a special member page</a>
-            <p>- or -</p>
-            <a href="?logoff">Log off</a>
-            
+                <h1>Members panel</h1>
+
+                <p>You can put member-only data here</p>
+                <a href="../profile/profile.php">View a special member page</a>
+                <p>- or -</p>
+                <a href="?logoff">Log off</a>
             </div>
             
             <div class="left right">
@@ -346,9 +360,11 @@ if($_SESSION['msg'])
 
 <div class="onlineWidget">
 	<div class="panel"><img class="preloader" src="../images/preloader.gif" alt="Loading.." width="22" height="22" /></div>
-	<div class="count"></div>
-    <div class="label">online</div>
-    <div class="arrow"></div>
+    <div class="bottom_panel">
+        <div class="count"></div>
+        <div class="label">online</div>
+        <div class="arrow"></div>
+    </div>
 </div>
 
 </body>
