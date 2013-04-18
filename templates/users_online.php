@@ -35,11 +35,14 @@ while($row=mysql_fetch_assoc($result))
 {
 	echo '
 	<div class="geoRow">
-		<div class="avatar"><img src="'.mysql_fetch_row(mysql_query("SELECT avatar FROM users WHERE nick='".$row['nick']."'"))[0].'"
-		 width="11" height="11" /></div>
-		<div class="user">'.$row['nick'].'</div>
+	    <a href="../profile/'.$row['nick'].'" class="user_link">
+            <div class="avatar"><img src="'.mysql_fetch_row(mysql_query("SELECT avatar FROM users
+             WHERE nick='".$row['nick']."'"))[0].'" width="11" height="11" /></div>
+            <div class="user">'.$row['nick'].'</div>
+		</a>
 		<div class="status"><img id="status_icon'.$counter.'" src="" width="8" height="8" /></div>
-		<script type="text/javascript">statusIcon('.$row['status'].', function(image){ document.getElementById("status_icon'.$counter.'").src = image; });</script>
+		<script type="text/javascript">statusIcon('.$row['status'].',
+		 function(image){ document.getElementById("status_icon'.$counter.'").src = image; });</script>
 	</div>
 	';
     $counter++;

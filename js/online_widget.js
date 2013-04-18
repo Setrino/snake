@@ -1,6 +1,5 @@
 $(document).ready(function(){
 	// This function is executed once the document is loaded
-	
 	// Caching the jQuery selectors:
 	var count = $('.onlineWidget .count');
 	var panel = $('.onlineWidget .panel');

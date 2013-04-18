@@ -20,7 +20,7 @@ $_SESSION['last_on'] = time();
 
 function killSession(){
     //mysql_query("UPDATE online SET status=0, last_on=time(), room=null WHERE id='".$_SESSION['id']."'");
-    mysql_query("UPDATE online SET status=0, last_on=time() WHERE id='".$_SESSION['id']."'");
+    mysql_query("UPDATE online SET status=0, last_on=NOW() WHERE id='".$_SESSION['id']."'") or die (mysql_error());
     $_SESSION = array();
     session_destroy();
 
@@ -320,6 +320,9 @@ if($_SESSION['msg'])
     <div id="main">
       <div class="container">
         <h1>Snake MMO</h1>
+          <?php if($_SESSION['id']): ?>
+          <a href='../profile/<?php echo $_SESSION['nick']?>'>Profile</a>
+          <?php endif; ?>
         <h2>Online Canvas game of Snake</h2>
         </div>
       <div class="container">
