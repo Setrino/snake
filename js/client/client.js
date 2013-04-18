@@ -80,6 +80,9 @@ var setEventHandlers = function() {
 
 	// Player removed message received
 	socket.on("remove player", onRemovePlayer);
+
+    // Receive message from the server
+    socket.on("receive message", onReceiveMessage);
 };
 
 // Keyboard key down
@@ -215,6 +218,21 @@ function onUpdate(){
             snakeT[s].toGrid();
     }
     winGame();
+}
+
+// Sends the server a message
+function onSendMessage(message){
+    if(message != '' || message != null)
+    socket.emit("receive message", {nick: sessionUser, message: message, sessionRoom: sessionRoom});
+}
+
+// Receive from the server a message
+function onReceiveMessage(data){
+
+    messages = data.messages;
+
+    for(s in messages)
+        console.log(messages[s]['nick'] + " " + messages[s]['message']);
 }
 
 /**************************************************

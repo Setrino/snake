@@ -61,6 +61,8 @@ var setEventHandlers = function() {
 // New socket connection
 function onSocketConnection(client) {
 
+    client.join('group');
+
     util.log("New player has connected: " + client.id);
 
 	// Listen for client disconnected
@@ -74,6 +76,9 @@ function onSocketConnection(client) {
 
     // Listen for move player message
     client.on("request data", onRequestData);
+
+    //Received message from player
+    client.on("receive message", onReceiveMessage);
 };
 
 // Socket client has disconnected
@@ -148,7 +153,7 @@ function onMovePlayer(data) {
 
 function onRequestData(data){
 
-    data.join(data.sessionRoom);
+    // Change to session Group later
 
     that = this;
 
@@ -168,6 +173,15 @@ function onRequestData(data){
             temp = true;
         }
     });
+}
+
+// Add to the DB the last message from the user and pull the messages for the last 6 minutes with an array
+// (nick, message)
+function onReceiveMessage(data){
+
+        addMessageDB(data.nick, data.message, data.sessionRoom, function(messages){
+            socket.sockets.in('group').emit("receive message", {messages: messages});
+        });
 }
 
 function gameStart(){
@@ -253,5 +267,29 @@ function requestData(user, roomName, callback){
             throw err;
         }
     });
+}
+
+//Posts the message to the database
+function addMessageDB(user, message, roomName, callback){
+
+
+    mysql.query('INSERT INTO chat_' + roomName + '(nick, p_time, message)  VALUES( \''
+        + user + '\', NOW(), ?)', message, function(err, results){
+
+        if(!err){
+
+            mysql.query('SELECT nick, message FROM chat_' + roomName + ' WHERE NOW() - p_time < 360 ORDER BY p_time', function(err, results){
+                if(!err){
+                    callback(results);
+                }else{
+                    throw err;
+                }
+            });
+        }else{
+            throw err;
+        }
+    });
+
+
 }
 

@@ -12,11 +12,26 @@ session_set_cookie_params(2*7*24*60*60);
 
 session_start();
 
+if(get_magic_quotes_gpc()){
+    $_POST = array_map('stripslash', $_POST);
+}
+function stripslash($value){
+    if(is_array($value))
+        return array_map('stripslash', $value);
+    else
+        return stripslashes($value);
+}
+
 $getNick = '';
 $query = '';
 $err = array();
 
-if(isset($_GET['name']) && $_SESSION['id']){
+if(!isset($_GET['name'])){
+    header("Location: ../404");
+    exit;
+}
+
+if($_SESSION['id']){
     $getTable = $_GET['name'];
     $getNick = $_SESSION['nick'];
     $query = mysql_query("SELECT room from online WHERE nick='$getNick'") or die(mysql_error());
@@ -60,8 +75,15 @@ if(!count($err)){
     init('<?php echo $getTable; ?>', '<?php echo $getNick; ?>');
     animate();
 </script>
-
 <div id="status"></div>
+
+<input type="text" name="message" id="message" style="width: 250px" />
+<input type="submit" class="message_form" value="Send" />
+
+<script>
+    $('.message_form').on('click', function(){onSendMessage($('#message').val())});
+</script>
+
 </body>
 
 <?php }else{ ?>
