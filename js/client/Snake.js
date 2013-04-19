@@ -1,9 +1,10 @@
 /**************************************************
  ** LOCAL PLAYER CLASS
  **************************************************/
-function Snake(size, orgX, orgY, orgDir, color, ai, number, team){
+function Snake(nick, size, orgX, orgY, orgDir, color, ai, number, team){
 
     this.keypressed = false,
+        this.nick = nick,
         this.step = 0,
         this.sweets = 0,
         this.alive = true,
@@ -11,8 +12,9 @@ function Snake(size, orgX, orgY, orgDir, color, ai, number, team){
         this.size = size,
         this.orgX = orgX,
         this.orgY = orgY,
-        this.orgDir = orgDir,
         this.snakeA = [],
+        this.orgDir = orgDir,
+        this.turnDir = orgDir,
         this.ai = ai,
         this.number = number,
         this.team = team,
@@ -38,63 +40,63 @@ Snake.prototype.died = function(){
 }
 
 //Main snake logic. KeyStroke recognition, Sending data, Receiving data
-Snake.prototype.update = function(grid){
+Snake.prototype.update = function(that, grid){
 
-    console.log("Turn " + this.step + " time " + new Date().getSeconds() + "." +  new Date().getUTCMilliseconds());
+    console.log("Turn " + that.step + " time " + new Date().getSeconds() + "." +  new Date().getUTCMilliseconds());
 
-    var prev = [this.snakeA[0][0], this.snakeA[0][1], this.snakeA[0][2]];
+    var prev = [that.snakeA[0][0], that.snakeA[0][1], that.snakeA[0][2]];
 
     //Left, Top is (0,0)
-    switch(this.snakeA[0][2]){
+    switch(that.snakeA[0][2]){
 
         case 0:
-            this.snakeA[0][1] -=1;
+            that.snakeA[0][1] -=1;
             break;
         case 1:
-            this.snakeA[0][0] +=1;
+            that.snakeA[0][0] +=1;
             break;
         case 2:
-            this.snakeA[0][1] +=1;
+            that.snakeA[0][1] +=1;
             break;
         case 3:
-            this.snakeA[0][0] -=1;
+            that.snakeA[0][0] -=1;
             break;
     }
 
-    if(this.snakeA[0][0] < 0){
+    if(that.snakeA[0][0] < 0){
         alert("X");
-        this.snakeA[0][0] = 0;
+        that.snakeA[0][0] = 0;
     }
-    if(this.snakeA[0][1] < 0){
-        this.snakeA[0][1] = 0;
+    if(that.snakeA[0][1] < 0){
+        that.snakeA[0][1] = 0;
         alert("Y");
     }
 
-    if(this.step != 0){
-        for(var i = 1; i < this.snakeA.length; i++){
-            var temp = [this.snakeA[i][0], this.snakeA[i][1], this.snakeA[i][2]];
+    if(that.step != 0){
+        for(var i = 1; i < that.snakeA.length; i++){
+            var temp = [that.snakeA[i][0], that.snakeA[i][1], that.snakeA[i][2]];
 
 
             //-------- If snake falls on itself - die -------//
 
-            if(this.snakeA[0][0] == this.snakeA[i][0] && this.snakeA[0][1] == this.snakeA[i][1]){
-                //this.died();
+            if(that.snakeA[0][0] == that.snakeA[i][0] && that.snakeA[0][1] == that.snakeA[i][1]){
+                //that.died();
             }
-            this.snakeA[i][0] = prev[0];
-            this.snakeA[i][1] = prev[1];
-            this.snakeA[i][2] = prev[2];
+            that.snakeA[i][0] = prev[0];
+            that.snakeA[i][1] = prev[1];
+            that.snakeA[i][2] = prev[2];
             prev = temp.slice();
         }
     }
 
     try{
-        value = grid[this.snakeA[0][1]][this.snakeA[0][0]];
+        value = grid[that.snakeA[0][1]][that.snakeA[0][0]];
     }catch(err){
-        console.log("Snake at " + this.snakeA[0][1] + " " + this.snakeA[0][0]);
+        console.log("Snake at " + that.snakeA[0][1] + " " + that.snakeA[0][0]);
         console.log("Grid size " + grid.length + " " + grid[0].length);
     }
 
-    if(grid[this.snakeA[0][1]][this.snakeA[0][0]] == 2){
+    if(grid[that.snakeA[0][1]][that.snakeA[0][0]] == 2){
         console.log("DIED");
     }
 
@@ -102,41 +104,42 @@ Snake.prototype.update = function(grid){
 
         switch(value){
             case 1:
-                this.sweets++;
+                that.sweets++;
                 ate = true;
-                this.add();
-                grid[this.snakeA[0][1]][this.snakeA[0][0]] = 0;
-                this.toGrid();
+                that.add();
+                grid[that.snakeA[0][1]][that.snakeA[0][0]] = 0;
+                that.toGrid();
                 break;
             case 2:
-                this.died();
+                that.died();
                 break;
             /*default:
              if(value.indexOf('_') != -1){
              console.log("COOL");
              getSnakeInstance(value.substring(0, value.indexOf('_'))).died();
-             this.died();
+             that.died();
              }else{
-             this.died();
+             that.died();
              }
              break;*/
         }
     }else{
-        this.toGrid();
+        that.toGrid();
     }
-    this.keypressed = false;
+    that.keypressed = false;
 }
 
 //Using keystroke turn the snake
-Snake.prototype.turn = function(turnDir){
+Snake.prototype.turn = function(grid, callback){
 
     if(this.keypressed == false){
-        if(turnDir != this.snakeA[0][2] && (turnDir + 2) % 4 != this.snakeA[0][2]){
-            this.snakeA[0][2] = turnDir;
-            console.log(turnDir);
+        if(this.turnDir != this.snakeA[0][2] && (this.turnDir + 2) % 4 != this.snakeA[0][2]){
+            this.snakeA[0][2] = this.turnDir;
+            console.log(this.turnDir);
         }
     }
     this.keypressed = true;
+    callback(this, grid);
 }
 
 //Adds one extra block for the snake
@@ -223,6 +226,10 @@ Snake.prototype.draw = function(ctx){
 }
 
 // Getters and setters
+Snake.prototype.getNick = function() {
+    return this.nick;
+};
+
 Snake.prototype.getSize = function() {
     return this.size;
 };
@@ -286,4 +293,12 @@ Snake.prototype.getArray = function() {
 
 Snake.prototype.setArray = function(newArray) {
     this.snakeA = newArray.slice();
+};
+
+Snake.prototype.setTurnDir = function(turnDir) {
+    this.turnDir = turnDir;
+};
+
+Snake.prototype.getTurnDir = function() {
+    return this.turnDir;
 };

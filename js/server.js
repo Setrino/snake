@@ -13,7 +13,7 @@ var socket,		// Socket controller
     connect,
 	players,
     pvpNo,      // Array of connected players
-    step,       // Step is the current value
+    room_step,  // Current step of person in the room
     gThis,
     temp = true;
 
@@ -23,6 +23,7 @@ var socket,		// Socket controller
 function init() {
 	// Create an empty array to store players
 	players = [];
+    room_step = [];
 	// Set up Socket.IO to listen on port 8000
 	socket = io.listen(8000);
 
@@ -61,8 +62,6 @@ var setEventHandlers = function() {
 // New socket connection
 function onSocketConnection(client) {
 
-    client.join('group');
-
     util.log("New player has connected: " + client.id);
 
 	// Listen for client disconnected
@@ -93,11 +92,17 @@ function onClientDisconnect() {
 		return;
 	};
 
-	// Remove player from players array
-	players.splice(players.indexOf(removePlayer), 1);
-
-	// Broadcast removed player to connected socket clients
-	this.broadcast.emit("remove player", {id: this.id});
+    for(t in players){
+        room = players[t];
+        for(s in room){
+            if(room[s].id == this.id){
+                // Remove player from players array
+                room.splice(room.indexOf(room[s], 1));
+                // Broadcast removed player to connected socket clients
+                socket.sockets.in(room).emit("remove player", {id: this.id});
+            }
+        }
+    }
 };
 
 //function(size, orgX, orgY, orgDir, color, ai, number, team, updated)
@@ -106,36 +111,41 @@ function onClientDisconnect() {
 // New player has joined
 function onNewPlayer(data) {
 	// Create a new player
-    var newPlayer = new Snake(data.size, data.x, data.y, data.orgDir,
+    var newPlayer = new Snake(data.nick, data.size, data.x, data.y, data.orgDir,
         data.color, data.ai, data.number, data.team);
     newPlayer.id = this.id;
 
+    var room = data.room;
+    var roomPlayers = getRoom(room);
+
 	// Broadcast new player to connected socket clients
-	this.broadcast.emit("new player", {id: newPlayer.id, size: newPlayer.getSize(), x: newPlayer.getX(),
-        y: newPlayer.getY(), orgDir: newPlayer.getDir(), color: newPlayer.getColor(),
-        ai: newPlayer.getAi(), number: newPlayer.getNumber(), team: newPlayer.getTeam()});
+    socket.sockets.in(room).emit("new player", {id: newPlayer.id, nick: newPlayer.getNick(), size: newPlayer.getSize(),
+        x: newPlayer.getX(), y: newPlayer.getY(), orgDir: newPlayer.getDir(), color: newPlayer.getColor(),
+            ai: newPlayer.getAi(), number: newPlayer.getNumber(), team: newPlayer.getTeam()});
 
 	// Send existing players to the new player
 	var i, existingPlayer;
 
-	for (i = 0; i < players.length; i++) {
-		existingPlayer = players[i];
-		this.emit("new player", {id: existingPlayer.id, size: existingPlayer.getSize(), x: existingPlayer.getX(),
-            y: existingPlayer.getY(), orgDir: existingPlayer.getDir(), color: existingPlayer.getColor(),
-            ai: existingPlayer.getAi(), number: existingPlayer.getNumber(), team: existingPlayer.getTeam()});
+	for (i = 0; i < roomPlayers.length; i++) {
+		existingPlayer = roomPlayers[i];
+		this.emit("new player", {id: existingPlayer.id, nick: existingPlayer.getNick(), size: existingPlayer.getSize(),
+            x: existingPlayer.getX(), y: existingPlayer.getY(), orgDir: existingPlayer.getDir(),
+                color: existingPlayer.getColor(), ai: existingPlayer.getAi(), number: existingPlayer.getNumber(),
+                    team: existingPlayer.getTeam()});
 	};
 
 	// Add new player to the players array
-	players.push(newPlayer);
+    roomPlayers.push(newPlayer);
 
-    if(players.length == 2 * pvpNo)
-        gameStart();
+    if(roomPlayers.length == 2 * pvpNo)
+        gameStart(room);
 };
 
 // Player has moved
 function onMovePlayer(data) {
 	// Find player in array
 	var movePlayer = playerById(this.id);
+    var room = data.room;
 
 	// Player not found
 	if (!movePlayer) {
@@ -143,12 +153,16 @@ function onMovePlayer(data) {
 		return;
 	};
 
-	// Update player position
-    movePlayer.setArray(data.snakeA);
-    movePlayer.setStep(data.step);
+        for(s in players[room]){
+            if(players[room][s].id == this.id){
+                players[room][s].setArray(data.snakeA);
+                players[room][s].setStep(data.step);
+            }
+    }
 
 	// Broadcast updated position to connected socket clients
-	this.broadcast.emit("move player", {id: movePlayer.id, step: movePlayer.getStep(), snakeA: movePlayer.getArray()});
+    socket.sockets.in(room).emit("move player", {id: movePlayer.id, step: movePlayer.getStep(),
+        snakeA: movePlayer.getArray()});
 };
 
 function onRequestData(data){
@@ -156,22 +170,17 @@ function onRequestData(data){
     // Change to session Group later
 
     that = this;
+    that.join(data.sessionRoom);
 
     requestData(data.sessionUser, data.sessionRoom, function(room, value){
 
-        if(temp) {
-            that.emit("init player", {size: value['size'], orgX: value['orgX'], orgY: value['orgY'],
-                orgDir: value['orgDir'], color: value['color'], ai: "false", number: value['number'],
-                team: value['team'], cW: room['width'], cH: room['height'], dim: 20, pvpNo: pvpNo,
-                id: that.id});
+        retrieveFromDB(data.sessionRoom, function(messages){
 
-            temp = false;
-        }else{
-            team = players.length % 2;
-            that.emit("init player", {size: 5, orgX: 4, orgY: 14, orgDir: 0, color: "orange",
-                ai: "false", number: 5, team: team, cW: 500, cH: 320, dim: 20, pvpNo: pvpNo, id: that.id});
-            temp = true;
-        }
+            that.emit("init player", {nick: data.sessionUser, size: value['size'], orgX: value['orgX'],
+                orgY: value['orgY'], orgDir: value['orgDir'], color: value['color'], ai: "false",
+                    number: value['number'], team: value['team'], cW: room['width'], cH: room['height'], dim: 20,
+                        pvpNo: pvpNo, id: that.id, messages: messages});
+        });
     });
 }
 
@@ -180,14 +189,14 @@ function onRequestData(data){
 function onReceiveMessage(data){
 
         addMessageDB(data.nick, data.message, data.sessionRoom, function(messages){
-            socket.sockets.in('group').emit("receive message", {messages: messages});
+            socket.sockets.in(data.sessionRoom).emit("receive message", {messages: messages});
         });
 }
 
-function gameStart(){
+function gameStart(room){
 
-    socket.sockets.in('group').emit("start");
-    step = 1;
+    socket.sockets.in(room).emit("start");
+    room_step[room] = 1;
     updateStep();
 }
 
@@ -196,32 +205,55 @@ function gameStart(){
 **************************************************/
 // Find player by ID
 function playerById(id) {
-	var i;
-	for (i = 0; i < players.length; i++) {
-		if (players[i].id == id)
-			return players[i];
-	};
 
+    for(t in players){
+        for(s in players[t]){
+            if(players[t][s].id == id)
+                return players[t][s];
+        }
+    }
 	return false;
 };
 
 //uStep checks if all the values were updated
 function updateStep(){
 
-    uStep = true;
-
-    for(s in players){
-        if(players[s].getStep() != step)
-            uStep = uStep && false;
-        else
-            uStep = uStep && true;
-    }
-
-    if(uStep){
-        socket.sockets.in('group').emit("update");
-        step++;
+    for(t in players){
+        uStep = true;
+        room = t;
+        roomArr = players[t];
+        for(s in roomArr){
+            if(roomArr[s].getStep() != getRoomStep(room))
+                uStep = uStep && false;
+            else
+                uStep = uStep && true;
+        }
+        if(uStep){
+            socket.sockets.in(room).emit("update");
+            util.log('Room ' + room + ' step ' + getRoomStep(room));
+            roomStepUp(room);
+        }
     }
     loop = setTimeout(updateStep, 1000/2);
+}
+
+function getRoomStep(room){
+
+    return room_step[room];
+}
+
+function roomStepUp(room){
+    room_step[room]++;
+}
+
+function getRoom(room){
+
+    if(players[room] == null){
+        players[room] = [];
+        return players[room];
+    }else{
+        return players[room];
+    }
 }
 
 /**************************************************
@@ -277,19 +309,23 @@ function addMessageDB(user, message, roomName, callback){
         + user + '\', NOW(), ?)', message, function(err, results){
 
         if(!err){
+            retrieveFromDB(roomName, callback);
 
-            mysql.query('SELECT nick, message FROM chat_' + roomName + ' WHERE NOW() - p_time < 360 ORDER BY p_time', function(err, results){
-                if(!err){
-                    callback(results);
-                }else{
-                    throw err;
-                }
-            });
         }else{
             throw err;
         }
     });
+}
 
+//Retrieve the latest messages from the DB
+function retrieveFromDB(roomName, callback){
 
+    mysql.query('SELECT nick, message FROM chat_' + roomName + ' WHERE NOW() - p_time < 600 ORDER BY p_time', function(err, results){
+        if(!err){
+            callback(results);
+        }else{
+            throw err;
+        }
+    });
 }
 

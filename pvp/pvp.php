@@ -63,27 +63,36 @@ if(!count($err)){
 </head>
 
 <body>
-<canvas id="gameCanvas"></canvas>
-<script src="../js/jquery-1.9.1.min.js"></script>
-<script src="http://localhost:8000/socket.io/socket.io.js"></script>
-<script src="../js/client/requestAnimationFrame.js"></script>
-<script src="../js/client/Keys.js"></script>
-<script src="../js/client/Snake.js"></script>
-<script src="../js/client/client.js"></script>
-<script>
-    // Initialise the game
-    init('<?php echo $getTable; ?>', '<?php echo $getNick; ?>');
-    animate();
-</script>
-<div id="status"></div>
+    <canvas id="gameCanvas"></canvas>
+    <script src="../js/jquery-1.9.1.min.js"></script>
+    <script src="http://localhost:8000/socket.io/socket.io.js"></script>
+    <script src="../js/client/requestAnimationFrame.js"></script>
+    <script src="../js/client/Keys.js"></script>
+    <script src="../js/client/Snake.js"></script>
+    <script src="../js/client/client.js"></script>
+    <script>
+        // Initialise the game
+        init('<?php echo $getTable; ?>', '<?php echo $getNick; ?>');
+        animate();
+    </script>
+    <div id="status"></div>
 
-<input type="text" name="message" id="message" style="width: 250px" />
-<input type="submit" class="message_form" value="Send" />
+    <div>
+        <div id="chat"></div>
+        <input type="text" name="message" id="message"/>
+        <input type="submit" class="message_form" value="Send" />
+    </div>
 
-<script>
-    $('.message_form').on('click', function(){onSendMessage($('#message').val())});
-</script>
-
+    <script>
+        message = $('#message');
+        message.keyup(function(event){
+            if(event.keyCode == 13 && message.is(':focus')){
+                onSendMessage(message.val());
+                message.val('');
+            }
+        });
+        $('.message_form').on('click', function(){onSendMessage(message.val()); message.val('');});
+    </script>
 </body>
 
 <?php }else{ ?>

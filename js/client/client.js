@@ -19,7 +19,6 @@ var canvas,			// Canvas DOM element
     sessionRoom,    // MySQL table of the current game
     sessionUser;
 
-
 /**************************************************
 ** GAME INITIALISATION
 **************************************************/
@@ -130,15 +129,17 @@ function onLocalPlayer(data){
 
     initializeGrid();
     initCircles();
+    appendMessages(data.messages);
 
-    localPlayer = new Snake(data.size, data.orgX, data.orgY, data.orgDir, data.color, data.ai, data.number, data.team);
+    localPlayer = new Snake(data.nick, data.size, data.orgX, data.orgY, data.orgDir, data.color, data.ai, data.number,
+        data.team);
     localPlayer.id = data.id;
 
     snakeT.push(localPlayer);
 
-    socket.emit("new player", {size: localPlayer.getSize(), x: localPlayer.getX(),
+    socket.emit("new player", {nick : localPlayer.getNick(), size: localPlayer.getSize(), x: localPlayer.getX(),
         y: localPlayer.getY(), orgDir: localPlayer.getDir(), color: localPlayer.getColor(),
-        ai: localPlayer.getAi(), number: localPlayer.getNumber(), team: localPlayer.getTeam()});
+        ai: localPlayer.getAi(), number: localPlayer.getNumber(), team: localPlayer.getTeam(), room: sessionRoom});
 }
 
 // Socket disconnected
@@ -149,45 +150,51 @@ function onSocketDisconnect() {
 // New player
 function onNewPlayer(data) {
 
-	// Initialise the new player
-	var newPlayer = new Snake(data.size, data.x, data.y, data.orgDir,
-        data.color, data.ai, data.number, data.team);
-	newPlayer.id = data.id;
+    if(data.id != localPlayer.id){
+        // Initialise the new player
+        var newPlayer = new Snake(data.nick, data.size, data.x, data.y, data.orgDir,
+            data.color, data.ai, data.number, data.team);
+        newPlayer.id = data.id;
 
-
-    //snakes.splice(1, 1);
-    snakeT.push(newPlayer);
-
+        //snakes.splice(1, 1);
+        snakeT.push(newPlayer);
+    }
 };
 
 // Move player
 function onMovePlayer(data) {
-	var movePlayer = playerById(data.id);
 
-	// Player not found
-	if (!movePlayer) {
-		console.log("Player not found: "+data.id);
-		return;
-	};
+    if(data.id != localPlayer.id){
+        var movePlayer = playerById(data.id);
 
-	// Update player position
-    movePlayer.setStep(data.step);
-    movePlayer.setArray(data.snakeA);
+        // Player not found
+        if (!movePlayer) {
+            console.log("Player not found: "+data.id);
+            return;
+        };
+
+        console.log("From " + data.id + " step " + data.step);
+
+        // Update player position
+        movePlayer.setStep(data.step);
+        movePlayer.setArray(data.snakeA);
+    }
 };
 
 // Remove player
 function onRemovePlayer(data) {
-	var removePlayer = playerById(data.id);
 
-	// Player not found
-	if (!removePlayer) {
-		console.log("Player not found: "+data.id);
-		return;
-	};
+    if(data.id != localPlayer){
+        var removePlayer = playerById(data.id);
 
-
-	// Remove player from array
-	snakeT.splice(snakeT.indexOf(removePlayer), 1);
+        // Player not found
+        if (!removePlayer) {
+            console.log("Player not found: "+data.id);
+            return;
+        };
+        // Remove player from array
+        snakeT.splice(snakeT.indexOf(removePlayer), 1);
+    }
 };
 
 function onStart(){
@@ -202,6 +209,8 @@ function onStart(){
     gameLoop();
 }
 
+// On update is called when the step for all the snakes in the room is the same. Takes the latest turn decision,
+// updates the turning in that direction and send it back to the server
 function onUpdate(){
 
     emptyGrid();
@@ -209,9 +218,10 @@ function onUpdate(){
     for(s in snakeT){
         if(snakeT[s].alive){
             if(snakeT[s] == localPlayer){
-                snakeT[s].update(grid);
+                localPlayer.turn(grid, localPlayer.update);
                 localPlayer.stepUp();
-                socket.emit("move player", {step: localPlayer.getStep(), snakeA: localPlayer.getArray()});
+                socket.emit("move player", {step: localPlayer.getStep(), snakeA: localPlayer.getArray(),
+                    room: sessionRoom});
             }
         }
         else
@@ -222,17 +232,23 @@ function onUpdate(){
 
 // Sends the server a message
 function onSendMessage(message){
-    if(message != '' || message != null)
+
+    if(message != '' && message != null && message != undefined)
     socket.emit("receive message", {nick: sessionUser, message: message, sessionRoom: sessionRoom});
 }
 
-// Receive from the server a message
+// Receive from the server a message (nick, message)
 function onReceiveMessage(data){
 
-    messages = data.messages;
+    appendMessages(data.messages);
+}
 
-    for(s in messages)
-        console.log(messages[s]['nick'] + " " + messages[s]['message']);
+function appendMessages(messages){
+
+    chatBlock = $('#chat').html('');
+
+    for(m in messages)
+        chatBlock.append('<div><strong>' + messages[m]['nick'] + ': </strong>' + messages[m]['message'] + '</div>');
 }
 
 /**************************************************

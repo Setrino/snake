@@ -1,9 +1,10 @@
 /**************************************************
 ** SERVER PLAYER CLASS
 **************************************************/
-function Snake(size, orgX, orgY, orgDir, color, ai, number, team){
+function Snake(nick, size, orgX, orgY, orgDir, color, ai, number, team){
 
     this.keypressed = false,
+        this.nick = nick,
         this.step = 0,
         this.sweets = 0,
         this.alive = true,
@@ -195,6 +196,10 @@ Snake.prototype.draw = function(){
 }
 
 // Getters and setters
+Snake.prototype.getNick = function() {
+    return this.nick;
+};
+
 Snake.prototype.getSize = function() {
     return this.size;
 };
