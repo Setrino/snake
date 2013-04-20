@@ -210,6 +210,7 @@ if($_SESSION['msg'])
     <link rel="stylesheet" type="text/css" href="../css/styles.css" />
     <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../css/game.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="../css/buttons.css" media="screen" />
     <script lang="javascript" src="../js/jquery-1.9.1.min.js"></script>
     
     <!-- PNG FIX for IE6 -->
@@ -221,7 +222,10 @@ if($_SESSION['msg'])
     <script type="text/javascript" src="../js/slide.js"></script>
     <script type="text/javascript" src="../js/online_widget.js"></script>
     <script type="text/javascript" src="../js/pvp_requests.js"></script>
-    
+    <script type="text/javascript" src="../js/noty/jquery.noty.js"></script>
+    <script type="text/javascript" src="../js/noty/layouts/bottomLeft.js"></script>
+    <script type="text/javascript" src="../js/noty/themes/default.js"></script>
+    <script type="text/javascript" src="../js/noty/noty_request.js"></script>
     <?php echo $script; ?>
 </head>
 
@@ -369,6 +373,14 @@ if($_SESSION['msg'])
         <div class="arrow"></div>
     </div>
 </div>
+
+<?php if($_SESSION['id']): ?>
+    <script>
+        $(document).ready(function(){
+            promptNotifications('<?php echo $_SESSION['nick'] ?>', requestNotification);
+        });
+    </script>
+<?php endif; ?>
 
 </body>
 </html>

@@ -155,4 +155,30 @@ if(isset($_POST['type']) && isset($_POST['player'])){
         echo 'ERROR';
     }
 }
+
+    /*
+     * Add notification to the database for a specific user
+     * to - nick which receives the notification
+     * r_type - type of notification (request, accept, decline, room)
+     * text - text includes the room name, otherwise is blank
+     * from - from_who the message is coming from
+     */
+if(isset($_POST['to']) && isset($_POST['r_type']) && isset($_POST['text']) && isset($_POST['from'])){
+
+    $nick = $_POST['to'];
+    $type = $_POST['r_type'];
+    $text = $_POST['text'];
+    $from_who = $_POST['from'];
+    $query = mysql_query("INSERT INTO notifications(nick, text, type, from_who) VALUES('".$nick."',
+     '".$text."', '".$type."', '".$from_who."') ") or die (mysql_error());
+
+    if($query){
+
+        echo 'GOOD';
+
+    }else{
+        echo 'ERROR';
+    }
+}
+
 ?>
