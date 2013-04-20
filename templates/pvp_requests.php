@@ -4,6 +4,7 @@ define('INCLUDE_CHECK',true);
 require_once "login.php";
 require_once "functions.php";
 
+// Checks number of joinable rooms for each type
 if(isset($_POST['join'])){
 
     $sql_check = mysql_query("SELECT pvpNo, count(*) from rooms GROUP BY pvpNo") or die(mysql_error());
@@ -156,6 +157,40 @@ if(isset($_POST['type']) && isset($_POST['player'])){
     }
 }
 
+/*
+ * JOIN the room
+ * room - name of the room to join
+ * nick - localPlayer nick
+ * Get the all user details from the users database (color, size)
+ * Add them all to the current room
+ */
+if(isset($_POST['room']) && isset($_POST['nick']) && isset($_POST['join'])){
+
+    $roomID = $_POST['room'];
+    $nick = $_POST['nick'];
+    $color = '';
+    $size = '';
+
+    $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
+
+    if($user_data){
+
+        $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
+        $color = $u_rows['color'];
+        $size = $u_rows['size'];
+
+                $add_User = mysql_query("REPLACE INTO $roomID VALUES('$nick', 0, 4, 0, '$color', 4, 4, '$size', 2)")
+                    or die(mysql_error());
+        if($add_User){
+                mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
+        }else{
+            echo 'ERROR';
+        }
+    }else{
+        echo 'ERROR';
+    }
+}
+
     /*
      * Add notification to the database for a specific user
      * to - nick which receives the notification
@@ -169,12 +204,62 @@ if(isset($_POST['to']) && isset($_POST['r_type']) && isset($_POST['text']) && is
     $type = $_POST['r_type'];
     $text = $_POST['text'];
     $from_who = $_POST['from'];
-    $query = mysql_query("INSERT INTO notifications(nick, text, type, from_who) VALUES('".$nick."',
+    $query = mysql_query("REPLACE INTO notifications(nick, text, type, from_who) VALUES('".$nick."',
      '".$text."', '".$type."', '".$from_who."') ") or die (mysql_error());
+
+    if(!$query)
+        echo 'ERROR';
+}
+
+// Remove the message from notifications
+// nick = who's message
+// type = type of message removed
+// from = from_who came the message
+if(isset($_POST['nick']) && isset($_POST['type']) && isset($_POST['from'])){
+
+    $nick = $_POST['nick'];
+    $type = $_POST['type'];
+    $from_who = $_POST['from'];
+
+    $query = mysql_query("DELETE FROM notifications WHERE nick='".$nick."' && type='".$type."'
+     && from_who='".$from_who."'") or die (mysql_error());
+
+    if(!$query)
+        echo 'ERROR';
+
+
+}
+
+// Get all the notifications for the current user
+if(isset($_POST['nick']) && isset($_POST['notifications'])){
+
+    $nick = $_POST['nick'];
+             mysql_query('SET CHARACTER SET utf8');
+    $query = mysql_query("SELECT * FROM notifications WHERE nick='".$_POST['nick']."'") or die (mysql_error());
 
     if($query){
 
-        echo 'GOOD';
+        $rows = array();
+        while($row = mysql_fetch_assoc($query)) {
+            $rows[] = $row;
+        }
+        echo json_encode($rows);
+
+    }else{
+        echo 'ERROR';
+    }
+}
+
+// Check whether a user has an active room
+if(isset($_POST['nick']) && isset($_POST['room'])){
+
+    $nick = $_POST['nick'];
+
+    $query = mysql_query("SELECT room FROM online WHERE nick='".$_POST['nick']."'") or die (mysql_error());
+
+    if($query){
+
+        echo mysql_fetch_array($query, MYSQL_ASSOC)['room'];
 
     }else{
         echo 'ERROR';

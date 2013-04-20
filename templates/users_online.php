@@ -49,10 +49,12 @@ while($row=mysql_fetch_assoc($result))
              WHERE nick='".$row['nick']."'"))[0].'" width="11" height="11" /></div>';
 
     if($_SESSION['id']){
-                if($row['nick'] != $_SESSION['id']){
+                if($row['nick'] != $_SESSION['nick']){
          $msg .= '</a><div class="user" onclick="requestPvP(\'bottomLeft\',
                     \'Would you like to play against \' + $(this).html() + \'?\', $(this).html());">'
                         .$row['nick'].'</div>';
+        }else{
+                $msg .= '<div class="user">'.$row['nick'].'</div></a>';
         }
     }else{
         $msg .= '<div class="user">'.$row['nick'].'</div></a>';
