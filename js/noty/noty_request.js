@@ -59,6 +59,7 @@ function receiveRequest(from, text, type){
                 var wait = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
                     text: 'Sending approval to ' + from, type: 'warning'});
                 if(text != ''){
+                    removeNotyDB(type, from, function(){});
                     addNotyDB(from, 'accept', text, nick, function(msg){
                         setTimeout(function(){wait.close()}, 1000);
                         if(msg != 'ERROR'){
@@ -66,8 +67,8 @@ function receiveRequest(from, text, type){
                             var y = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
                                 text: from + ' received approval.', type: 'success'});
                             setTimeout(function(){y.close()}, 2000);
-                        }
-                    });
+                            }
+                        });
                 }else{
                     removeNotyDB(type, from, function(){});
                     addNotyDB(from, 'accept', '', nick, function(msg){
@@ -76,8 +77,8 @@ function receiveRequest(from, text, type){
                             var y = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
                                 text: from + ' received approval. Wait for room', type: 'success'});
                             setTimeout(function(){y.close()}, 2000);
-                        }
-                    });
+                            }
+                        });
                 }
             }
             },
@@ -104,23 +105,27 @@ function acceptRequest(from, text, type){
     setTimeout(function(){y.close()}, 2000);
 
     if(text != ''){
-        joinRoom(from, text, type);
+        removeNotyDB(type, from, function(){
+            //personalRoom(text);
+        });
     }else{
         requestSinglePvP(function(text){ sendRoom(from, text);
-            removeNotyDB(from, type);
+            removeNotyDB(from, type, function(){
             joinRoom (from, text, type);});
+        });
     }
 }
 
 function declineRequest(from, type){
 
-    removeNotyDB(type, from, function(){});
-    var c = noty({dismissQueue: true, force: true, layout: layout, closeWith: ['click', 'hover'],
-        theme: 'defaultTheme', text: from + ' declined your request', type: 'error'});
+    removeNotyDB(type, from, function(){
+        var c = noty({dismissQueue: true, force: true, layout: layout, closeWith: ['click', 'hover'],
+            theme: 'defaultTheme', text: from + ' declined your request', type: 'error'});
+    });
 }
 
 function roomAccept(from, text, type){
-        joinRoom(from, text, type);
+    joinRoom(from, text, type);
 }
 
 function sendRoom(from, text){
@@ -139,19 +144,55 @@ function sendRoom(from, text){
     });
 }
 
+// type of request sent (accept, decline, request, room)
 function joinRoom(from, text, type){
 
-    var join = noty({
-        text: 'Join the room ' + text + ' with ' + from,
+    updateUserRoom(text, function(){
+        var join = noty({
+            text: 'Join the room ' + text + ' with ' + from,
+            type: 'information',
+            dismissQueue: true,
+            layout: layout,
+            theme: 'defaultTheme',
+            buttons: [
+                {addClass: 'btn btn-success', text: 'Join', onClick: function($noty) {
+                    $noty.close();
+                    removeNotyDB(type, from, function(){window.location.href = '../pvp/' + text});
+                }
+                }
+            ]});
+    });
+}
+
+function personalRoom(text){
+
+    if(text != ''){
+        displayRoomNoty(text);
+    }else{
+        roomPresence(function(room){
+            if(room != '' || room != null || room != undefined){
+                displayRoomNoty(room);
+            }
+        });
+    }
+}
+
+function displayRoomNoty(text){
+
+    noty({
+        text: 'Your current room is ' + text,
         type: 'information',
         dismissQueue: true,
         layout: layout,
         theme: 'defaultTheme',
         buttons: [
-            {addClass: 'btn btn-success', text: 'Join', onClick: function($noty) {
+            {addClass: 'btn btn-success', text: 'Enter', onClick: function($noty) {
                 $noty.close();
-                updateUserRoom(text, function(){
-                    removeNotyDB(type, from, function(){window.location.href = '../pvp/' + text});});
+                window.location.href = '../pvp/' + text;
+            }
+            },
+            {addClass: 'btn btn-warning', text: 'Hide', onClick: function($noty) {
+                $noty.close();
                 }
             }
         ]});
@@ -160,9 +201,9 @@ function joinRoom(from, text, type){
 function promptNotifications(user, callback){
 
     nick = user;
+    personalRoom('');
     callback();
 }
-
 
 function requestNotification(){
 
@@ -207,12 +248,12 @@ function requestNotification(){
 }
 
 /*
-*  Add a notifcation to the database
-*  to - nick to which the notification is addressed
-*  type - type of notification (request, accept, decline, room)
-*  text - text is room ID
-*  from - from_who the notification was sent
-*/
+ *  Add a notifcation to the database
+ *  to - nick to which the notification is addressed
+ *  type - type of notification (request, accept, decline, room)
+ *  text - text is room ID
+ *  from - from_who the notification was sent
+ */
 function addNotyDB(to, type, text, from, callback){
 
     $.ajax({

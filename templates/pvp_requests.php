@@ -180,33 +180,33 @@ if(isset($_POST['room']) && isset($_POST['nick']) && isset($_POST['join'])){
     $color = '';
     $size = '';
 
-    $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
+        $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
 
-    if($user_data){
+        if($user_data){
 
-        $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
-        $color = $u_rows['color'];
-        $size = $u_rows['size'];
+            $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
+            $color = $u_rows['color'];
+            $size = $u_rows['size'];
 
-                $add_User = mysql_query("REPLACE INTO $roomID VALUES('$nick', 0, 4, 0, '$color', 4, 4, '$size', 2)")
-                    or die(mysql_error());
-        if($add_User){
-                mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
+                    $add_User = mysql_query("REPLACE INTO $roomID VALUES('$nick', 1, 4, 0, '$color', 4, 4, '$size', 2)")
+                        or die(mysql_error());
+            if($add_User){
+                    mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
+            }else{
+                echo 'ERROR';
+            }
         }else{
             echo 'ERROR';
         }
-    }else{
-        echo 'ERROR';
-    }
 }
 
-    /*
-     * Add notification to the database for a specific user
-     * to - nick which receives the notification
-     * r_type - type of notification (request, accept, decline, room)
-     * text - text includes the room name, otherwise is blank
-     * from - from_who the message is coming from
-     */
+/*
+ * Add notification to the database for a specific user
+ * to - nick which receives the notification
+ * r_type - type of notification (request, accept, decline, room)
+ * text - text includes the room name, otherwise is blank
+ * from - from_who the message is coming from
+ */
 if(isset($_POST['to']) && isset($_POST['r_type']) && isset($_POST['text']) && isset($_POST['from'])){
 
     $nick = $_POST['to'];
