@@ -56,13 +56,19 @@ function receiveRequest(from, text, type){
         buttons: [
             {addClass: 'btn btn-primary', text: 'Accept', onClick: function($noty) {
                 $noty.close();
+                var wait = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
+                    text: 'Sending approval to ' + from, type: 'warning'});
                 if(text != ''){
-
-                    joinRoom(from, text, type);
+                    addNotyDB(from, 'accept', text, nick, function(msg){
+                        setTimeout(function(){wait.close()}, 1000);
+                        if(msg != 'ERROR'){
+                            joinRoom(from, text, type);
+                            var y = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
+                                text: from + ' received approval.', type: 'success'});
+                            setTimeout(function(){y.close()}, 2000);
+                        }
+                    });
                 }else{
-
-                    var wait = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
-                        text: 'Sending approval to ' + from, type: 'warning'});
                     removeNotyDB(type, from, function(){});
                     addNotyDB(from, 'accept', '', nick, function(msg){
                         setTimeout(function(){wait.close()}, 1000);

@@ -144,7 +144,16 @@ if(isset($_POST['type']) && isset($_POST['player'])){
                     or die(mysql_error());
                             mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
 
-                echo $roomID;
+                $chat_room = mysql_query("CREATE TABLE chat_$roomID(id int(10) UNSIGNED NOT NULL, nick VARCHAR(32)
+                  NOT NULL, p_time datetime NOT NULL, message VARCHAR(255) NOT NULL, PRIMARY KEY(id)) engine myisam") or die (mysql_error());
+
+                if($chat_room){
+
+                    echo $roomID;
+
+                }else{
+                    echo 'ERROR';
+                }
 
             }else{
                 echo 'ERROR';

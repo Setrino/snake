@@ -231,7 +231,7 @@ a:hover{
 #chat{
     margin: 0 auto;
     width: 250px;
-    height: 30px;
+    height: 50px;
     overflow: auto;
     border: 1px solid #cccccc;
     text-align: left;

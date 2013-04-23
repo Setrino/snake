@@ -140,6 +140,8 @@ function onLocalPlayer(data){
     socket.emit("new player", {nick : localPlayer.getNick(), size: localPlayer.getSize(), x: localPlayer.getX(),
         y: localPlayer.getY(), orgDir: localPlayer.getDir(), color: localPlayer.getColor(),
         ai: localPlayer.getAi(), number: localPlayer.getNumber(), team: localPlayer.getTeam(), room: sessionRoom});
+
+    gameLoop();
 }
 
 // Socket disconnected
@@ -206,7 +208,7 @@ function onStart(){
 
     //snakeLoop();
     onUpdate();
-    gameLoop();
+    //gameLoop();
 }
 
 // On update is called when the step for all the snakes in the room is the same. Takes the latest turn decision,
