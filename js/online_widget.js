@@ -4,9 +4,8 @@ $(document).ready(function(){
 	var count = $('.onlineWidget .count');
 	var panel = $('.onlineWidget .panel');
 	var open = false;
-	
-	// Loading the number of users online into the count div:
-	count.load("../templates/no_online.php");
+
+    checkOnline();
 	
 	$('.bottom_panel').click(
 		function(){
@@ -41,4 +40,11 @@ $(document).ready(function(){
         $('.arrow').css("-webkit-transform","rotateZ(0deg)");
 		panel.slideUp();
 	});
+
+
+    function checkOnline(){
+        // Loading the number of users online into the count div:
+        count.load("../templates/no_online.php");
+        setTimeout(checkOnline, 30000);
+    }
 });

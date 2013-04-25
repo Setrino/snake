@@ -19,8 +19,27 @@ if(isset($_SESSION['last_on']) && (time() - $_SESSION['last_on']) > 1800){
 $_SESSION['last_on'] = time();
 
 function killSession(){
-    //mysql_query("UPDATE online SET status=0, last_on=time(), room=null WHERE id='".$_SESSION['id']."'");
-    mysql_query("UPDATE online SET status=0, last_on=NOW() WHERE id='".$_SESSION['id']."'") or die (mysql_error());
+
+    $query =  mysql_query("SELECT room FROM online WHERE id='".$_SESSION['id']."'") or die(mysql_error());
+    $room = mysql_fetch_array($query, MYSQL_ASSOC)['room'];
+
+    if($room != '' || $room != null){
+    $query = mysql_query("SELECT rooms.id FROM rooms INNER JOIN online ON rooms.name='$room'")
+        or die(mysql_error());
+    $id = mysql_fetch_array($query, MYSQL_ASSOC)['id'];
+
+        if($id != '' || $id != null){
+
+        mysql_query("DELETE FROM rooms WHERE name='$room'") or die(mysql_error());
+        mysql_query("DROP TABLE $room") or die(mysql_error());
+        mysql_query("DROP TABLE chat_$room") or die(mysql_error());
+        }
+    }
+
+    mysql_query("DELETE FROM notifications WHERE nick='".$_SESSION['nick']."'
+        || from_who='".$_SESSION['nick']."'") or die (mysql_error());
+    mysql_query("UPDATE online SET status=0, room='', last_on=NOW() WHERE id='".$_SESSION['id']."'")
+        or die (mysql_error());
     $_SESSION = array();
     session_destroy();
 

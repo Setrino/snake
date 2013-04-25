@@ -1,4 +1,5 @@
 var layout = 'bottomLeft';
+var notys;
 nick = '';
 
 // Request a PvP
@@ -100,16 +101,16 @@ function receiveRequest(from, text, type){
 
 function acceptRequest(from, text, type){
 
-    var y = noty({dismissQueue: true, force: true, layout: layout, theme: 'defaultTheme',
-        text: from + ' has accepted your request', type: 'success'});
-    setTimeout(function(){y.close()}, 2000);
+    var y = noty({dismissQueue: true, force: true, layout: layout,
+        theme: 'defaultTheme', text: from + ' has accepted your request', type: 'success'});
 
     if(text != ''){
         removeNotyDB(type, from, function(){
             //personalRoom(text);
         });
     }else{
-        requestSinglePvP(function(text){ sendRoom(from, text);
+        requestSinglePvP(function(text){
+            sendRoom(from, text);
             removeNotyDB(from, type, function(){
             joinRoom (from, text, type);});
         });
@@ -164,13 +165,14 @@ function joinRoom(from, text, type){
     });
 }
 
+// check whether you already have a room for yourself
 function personalRoom(text){
 
     if(text != ''){
         displayRoomNoty(text);
     }else{
         roomPresence(function(room){
-            if(room != '' || room != null || room != undefined){
+            if(room != '' && room != null && room != undefined){
                 displayRoomNoty(room);
             }
         });
@@ -201,6 +203,7 @@ function displayRoomNoty(text){
 function promptNotifications(user, callback){
 
     nick = user;
+    notys = [];
     personalRoom('');
     callback();
 }
@@ -217,24 +220,33 @@ function requestNotification(){
 
                 var array = eval ("(" + msg + ")");
 
-                for(i in array){
+                addNotification(array, function(){
 
-                    switch(array[i].type){
+                    for(i in notys){
 
-                        case 'request':
-                            receiveRequest(array[i].from_who, array[i].text, array[i].type);
-                            break;
-                        case 'accept':
-                            acceptRequest(array[i].from_who, array[i].text, array[i].type);
-                            break;
-                        case 'decline':
-                            declineRequest(array[i].from_who, array[i].type);
-                            break;
-                        case 'room':
-                            roomAccept(array[i].from_who, array[i].text, array[i].type);
-                            break;
+                        if(notys[i].seen == 0){
+
+                            notys[i].seen = 1;
+
+                        switch(notys[i].type){
+
+                            case 'request':
+                                receiveRequest(notys[i].from_who, notys[i].text, notys[i].type);
+                                break;
+                            case 'accept':
+                                acceptRequest(notys[i].from_who, notys[i].text, notys[i].type);
+                                break;
+                            case 'decline':
+                                declineRequest(notys[i].from_who, notys[i].type);
+                                break;
+                            case 'room':
+                                roomAccept(notys[i].from_who, notys[i].text, notys[i].type);
+                                break;
+                            }
+                        }
                     }
-                }
+
+                });
 
             }else{
 
@@ -244,7 +256,7 @@ function requestNotification(){
             alert(textStatus+" - "+errorThrown);
         }
     });
-    //setTimeout(requestNotification, 5000);
+    setTimeout(requestNotification, 5000);
 }
 
 /*
@@ -308,7 +320,7 @@ function roomPresence(callback){
 }
 
 // Create a 1v1 game for the local user (nick)
-function requestSinglePvP(){
+function requestSinglePvP(callback){
 
     $.ajax({
         type: "POST",
@@ -340,4 +352,33 @@ function updateUserRoom(text, callback){
             alert(textStatus+" - "+errorThrown);
         }
     });
+}
+
+//----------- Notifications array functions -----------//
+
+// Checks whether we had this notification already, if yes
+function addNotification(array, callback){
+
+    if(notys.length != 0){
+    for(i in notys){
+        for(j = 0; j < array.length; j++){
+            if(notys[i].id == array[j].id){
+                array.splice(j, 1);
+            }else{
+                array[j].seen = 0;
+                }
+            }
+        }
+    }else{
+        for(i in array){
+            array[i].seen = 0;
+        }
+    }
+    $.extend(notys, array);
+    callback();
+}
+
+function removeNotification(value){
+
+    notys.splice(value, 1);
 }
