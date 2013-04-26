@@ -258,6 +258,9 @@ function appendMessages(messages){
 
     for(m in messages)
         chatBlock.append('<div><strong>' + messages[m]['nick'] + ': </strong>' + messages[m]['message'] + '</div>');
+
+    var objDiv = document.getElementById("chat");
+    objDiv.scrollTop = objDiv.scrollHeight;
 }
 
 /**************************************************

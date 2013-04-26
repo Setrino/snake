@@ -171,7 +171,9 @@ function onMovePlayer(data) {
 
                 if(data.alive == false){
                     tempPlayer.setAlive(data.alive);
-                    gameEnd(room);
+                    gameEnd(room, function(team){
+                        util.log('Team ' + team + ' has lost');
+                    });
             }
         }
     }
@@ -216,7 +218,7 @@ function gameStart(room){
     updateStep();
 }
 
-function gameEnd(room){
+function gameEnd(room, callback){
 
         var pvpNo = getRoomPvPNo(room);
         var curRoom = players[room];
@@ -230,7 +232,7 @@ function gameEnd(room){
 
         for(a in teamAliveA){
             if(teamAliveA[a] == false){
-                util.log('Team ' + a + ' is DEAD');
+                callback(a);
                 getRoomStatus(room, 2);
             }
         }
@@ -315,8 +317,12 @@ function getRoomStatus(room, status){
 
     if(status){
         room_status[room] = status;
+        setRoomStatusDB(room, room_status[room], function(){
+            return room_status[room];
+        });
+    }else{
+            return room_status[room];
     }
-        return room_status[room];
 }
 
 /**************************************************
@@ -391,3 +397,14 @@ function retrieveFromDB(roomName, callback){
     });
 }
 
+//Retrieve the latest messages from the DB
+function setRoomStatusDB(roomName, state, callback){
+
+    mysql.query('UPDATE rooms SET state=' + state + ' WHERE name=?', roomName, function(err, results){
+        if(!err){
+            callback();
+        }else{
+            throw err;
+        }
+    });
+}
