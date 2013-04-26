@@ -171,8 +171,8 @@ function onMovePlayer(data) {
 
                 if(data.alive == false){
                     tempPlayer.setAlive(data.alive);
-                    gameEnd(room, function(team){
-                        util.log('Team ' + team + ' has lost');
+                    gameEnd(room, function(lost, won){
+                        util.log('Team ' + lost + ' has lost');
                     });
             }
         }
@@ -220,20 +220,27 @@ function gameStart(room){
 
 function gameEnd(room, callback){
 
-        var pvpNo = getRoomPvPNo(room);
         var curRoom = players[room];
-
         teamAliveA = [];
-        for(var i = 0; i < pvpNo; i++)
-            teamAliveA.push(false);
 
         for(s in curRoom)
             teamAliveA[curRoom[s].getTeam()] = teamAliveA[curRoom[s].getTeam] || curRoom[s].getAlive();
 
         for(a in teamAliveA){
             if(teamAliveA[a] == false){
-                callback(a);
-                getRoomStatus(room, 2);
+                var teamWon = -1;
+
+                //Status 2 - game ended
+                if(a == 0){
+                    teamWon = 1;
+                   callback(a, teamWon);
+                   setTeamWonDB(room, teamWon, function(){ getRoomStatus(room, 2);});
+                }
+                else{
+                    teamWon = 0;
+                    callback(a, teamWon);
+                    setTeamWonDB(room, teamWon, function(){ getRoomStatus(room, 2);});
+                }
             }
         }
 }
@@ -401,6 +408,18 @@ function retrieveFromDB(roomName, callback){
 function setRoomStatusDB(roomName, state, callback){
 
     mysql.query('UPDATE rooms SET state=' + state + ' WHERE name=?', roomName, function(err, results){
+        if(!err){
+            callback();
+        }else{
+            throw err;
+        }
+    });
+}
+
+//Set the team who won into the DB
+function setTeamWonDB(roomName, team_won, callback){
+
+    mysql.query('UPDATE rooms SET won_by=' + team_won + ' WHERE name=?', roomName, function(err, results){
         if(!err){
             callback();
         }else{
