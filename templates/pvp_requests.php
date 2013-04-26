@@ -142,9 +142,9 @@ if(isset($_POST['type']) && isset($_POST['player'])){
 
                 $add_User = mysql_query("INSERT INTO $roomID VALUES('$nick', 0, 4, 0, '$color', 4, 14, '$size', 0)")
                     or die(mysql_error());
-                            mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
+                            mysql_query("UPDATE online SET room='$roomID', status=2 WHERE nick='$nick'") or die(mysql_error());
 
-                $chat_room = mysql_query("CREATE TABLE chat_$roomID(id int(10) UNSIGNED NOT NULL, nick VARCHAR(32)
+                $chat_room = mysql_query("CREATE TABLE chat_$roomID(id int UNSIGNED NOT NULL auto_increment, nick VARCHAR(32)
                   NOT NULL, p_time datetime NOT NULL, message VARCHAR(255) NOT NULL, PRIMARY KEY(id)) engine myisam") or die (mysql_error());
 
                 if($chat_room){
@@ -154,7 +154,6 @@ if(isset($_POST['type']) && isset($_POST['player'])){
                 }else{
                     echo 'ERROR';
                 }
-
             }else{
                 echo 'ERROR';
             }
@@ -191,7 +190,7 @@ if(isset($_POST['room']) && isset($_POST['nick']) && isset($_POST['join'])){
                     $add_User = mysql_query("REPLACE INTO $roomID VALUES('$nick', 1, 4, 0, '$color', 4, 4, '$size', 2)")
                         or die(mysql_error());
             if($add_User){
-                    mysql_query("UPDATE online SET room='$roomID' WHERE nick='$nick'") or die(mysql_error());
+                    mysql_query("UPDATE online SET room='$roomID', status=2 WHERE nick='$nick'") or die(mysql_error());
             }else{
                 echo 'ERROR';
             }

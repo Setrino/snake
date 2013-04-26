@@ -139,7 +139,8 @@ function onLocalPlayer(data){
 
     socket.emit("new player", {nick : localPlayer.getNick(), size: localPlayer.getSize(), x: localPlayer.getX(),
         y: localPlayer.getY(), orgDir: localPlayer.getDir(), color: localPlayer.getColor(),
-        ai: localPlayer.getAi(), number: localPlayer.getNumber(), team: localPlayer.getTeam(), room: sessionRoom});
+        ai: localPlayer.getAi(), number: localPlayer.getNumber(), team: localPlayer.getTeam(), room: sessionRoom,
+            pvpNo: pvpNo});
 
     gameLoop();
 }
@@ -175,11 +176,16 @@ function onMovePlayer(data) {
             return;
         };
 
-        console.log("From " + data.id + " step " + data.step);
+        console.log("From " + data.id + " step " + data.step + ' to ' + localPlayer.id);
 
         // Update player position
         movePlayer.setStep(data.step);
         movePlayer.setArray(data.snakeA);
+
+        if(data.alive == false){
+            movePlayer.setAlive(false);
+            movePlayer.died();
+        }
     }
 };
 
@@ -223,13 +229,14 @@ function onUpdate(){
                 localPlayer.turn(grid, localPlayer.update);
                 localPlayer.stepUp();
                 socket.emit("move player", {step: localPlayer.getStep(), snakeA: localPlayer.getArray(),
-                    room: sessionRoom});
+                    room: sessionRoom, alive: localPlayer.getAlive()});
             }
         }
-        else
+        else{
             snakeT[s].toGrid();
+            //winGame();
+        }
     }
-    winGame();
 }
 
 // Sends the server a message
@@ -399,7 +406,8 @@ function winGame(){
 
     for(a in teamAliveA){
         if(teamAliveA[a] == false)
-            endGame = true;
+            endGame = false;
+        // Fix to true
     }
 }
 
@@ -464,7 +472,6 @@ var snakeLoop = function(){
                 temp = snakeT[s].update(grid);
                 if(snakeT[s] === localPlayer && temp)
                     socket.emit("move player", {dir: localPlayer.getDir(), step: localPlayer.getStep()});
-
             }else{
                 snakeT[s].toGrid();
             }
@@ -472,7 +479,7 @@ var snakeLoop = function(){
 
     //debugGrid();
 
-    winGame();
+    //winGame();
 
     if(!endGame)
         gLoop = setTimeout(snakeLoop, 1000 / 2);

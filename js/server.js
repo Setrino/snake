@@ -14,6 +14,8 @@ var socket,		// Socket controller
 	players,
     pvpNo,      // Array of connected players
     room_step,  // Current step of person in the room
+    room_pvpNo, // The PvP Number of the current room
+    room_status,// Current room status - waiting, in-game, ended
     gThis,
     temp = true;
 
@@ -24,6 +26,8 @@ function init() {
 	// Create an empty array to store players
 	players = [];
     room_step = [];
+    room_pvpNo = [];
+    room_status = [];
 	// Set up Socket.IO to listen on port 8000
 	socket = io.listen(8000);
 
@@ -117,6 +121,8 @@ function onNewPlayer(data) {
 
     var room = data.room;
     var roomPlayers = getRoom(room);
+    var pvpNo = getRoomPvPNo(room, data.pvpNo);
+    getRoomStatus(room);
 
 	// Broadcast new player to connected socket clients
     socket.sockets.in(room).emit("new player", {id: newPlayer.id, nick: newPlayer.getNick(), size: newPlayer.getSize(),
@@ -137,8 +143,11 @@ function onNewPlayer(data) {
 	// Add new player to the players array
     roomPlayers.push(newPlayer);
 
-    if(roomPlayers.length == 2 * pvpNo)
+    // FIX THE PVP NUMBER
+    if(roomPlayers.length == 2 * pvpNo){
         gameStart(room);
+        getRoomStatus(room, 1);
+    }
 };
 
 // Player has moved
@@ -152,17 +161,24 @@ function onMovePlayer(data) {
 		util.log("Player not found: "+this.id);
 		return;
 	};
-
+        util.log('Player ' + this.id + ' step ' + data.step);
         for(s in players[room]){
-            if(players[room][s].id == this.id){
-                players[room][s].setArray(data.snakeA);
-                players[room][s].setStep(data.step);
+                tempPlayer = players[room][s];
+
+            if(tempPlayer.id == this.id){
+                tempPlayer.setArray(data.snakeA);
+                tempPlayer.setStep(data.step);
+
+                if(data.alive == false){
+                    tempPlayer.setAlive(data.alive);
+                    gameEnd(room);
             }
+        }
     }
 
 	// Broadcast updated position to connected socket clients
     socket.sockets.in(room).emit("move player", {id: movePlayer.id, step: movePlayer.getStep(),
-        snakeA: movePlayer.getArray()});
+        snakeA: movePlayer.getArray(), alive: movePlayer.getAlive()});
 };
 
 function onRequestData(data){
@@ -179,7 +195,7 @@ function onRequestData(data){
             that.emit("init player", {nick: data.sessionUser, size: value['size'], orgX: value['orgX'],
                 orgY: value['orgY'], orgDir: value['orgDir'], color: value['color'], ai: "false",
                     number: value['number'], team: value['team'], cW: room['width'], cH: room['height'], dim: 20,
-                        pvpNo: pvpNo, id: that.id, messages: messages});
+                        pvpNo: room['pvpNo'], id: that.id, messages: messages});
         });
     });
 }
@@ -200,6 +216,26 @@ function gameStart(room){
     updateStep();
 }
 
+function gameEnd(room){
+
+        var pvpNo = getRoomPvPNo(room);
+        var curRoom = players[room];
+
+        teamAliveA = [];
+        for(var i = 0; i < pvpNo; i++)
+            teamAliveA.push(false);
+
+        for(s in curRoom)
+            teamAliveA[curRoom[s].getTeam()] = teamAliveA[curRoom[s].getTeam] || curRoom[s].getAlive();
+
+        for(a in teamAliveA){
+            if(teamAliveA[a] == false){
+                util.log('Team ' + a + ' is DEAD');
+                getRoomStatus(room, 2);
+            }
+        }
+}
+
 /**************************************************
 ** GAME HELPER FUNCTIONS
 **************************************************/
@@ -215,20 +251,27 @@ function playerById(id) {
 	return false;
 };
 
-//uStep checks if all the values were updated
+//uStep checks if all the values were updated, players[room][snake_instant]
 function updateStep(){
 
     for(t in players){
         uStep = true;
         room = t;
-        roomArr = players[t];
+        roomArr = players[room];
+        // Check for each snake at what step it is, and compare to the current room step
         for(s in roomArr){
-            if(roomArr[s].getStep() != getRoomStep(room))
-                uStep = uStep && false;
-            else
+            if(roomArr[s].getStep() == getRoomStep(room))
                 uStep = uStep && true;
+            else{
+                if(!roomArr[s].getAlive()){
+                    uStep = uStep && true;
+                }else{
+                    uStep = uStep && false;
+                }
+            }
         }
-        if(uStep){
+
+        if(uStep && getRoomStatus(room) != 2){
             socket.sockets.in(room).emit("update");
             util.log('Room ' + room + ' step ' + getRoomStep(room));
             roomStepUp(room);
@@ -250,10 +293,30 @@ function getRoom(room){
 
     if(players[room] == null){
         players[room] = [];
-        return players[room];
-    }else{
-        return players[room];
     }
+        return players[room];
+}
+
+// map for pvpNo for the current Room
+function getRoomPvPNo(room, pvpNo){
+
+   if(room_pvpNo[room] == null){
+       room_pvpNo[room] = pvpNo;
+   }
+        return room_pvpNo[room];
+}
+
+// 0 - waiting for new-game, 1 - in the process of game, 2 - game ended
+function getRoomStatus(room, status){
+
+    if(room_status[room] == null){
+        room_status[room] = 0;
+    }
+
+    if(status){
+        room_status[room] = status;
+    }
+        return room_status[room];
 }
 
 /**************************************************
@@ -275,7 +338,6 @@ function requestData(user, roomName, callback){
                     mysql.query('SELECT * FROM rooms WHERE name=?',[row['room']], function(err, results){
                         if(!err){
 
-                            pvpNo = results[0]['pvpNo'];
                             room = results[0];
 
                             mysql.query('SELECT * FROM ' + row['room'].toString() +

@@ -63,13 +63,26 @@ Snake.prototype.update = function(that, grid){
             break;
     }
 
+    //snake[0][0] - the x-axis value, grid[0].length - number of columns, so x
+    //snake[0][1] - the y-axis value, grid.length - number of rows, so y
     if(that.snakeA[0][0] < 0){
-        alert("X");
-        that.snakeA[0][0] = 0;
+        that.snakeA[0][0] +=1;
+        that.alive = false;}
+    if(that.snakeA[0][0] >= grid[0].length){
+        that.snakeA[0][0] -=1;
+        that.alive = false;
+    }
+    if(that.snakeA[0][1] >= grid.length){
+        that.snakeA[0][1] -=1;
+        that.alive = false;
     }
     if(that.snakeA[0][1] < 0){
-        that.snakeA[0][1] = 0;
-        alert("Y");
+        that.snakeA[0][1] +=1;
+        that.alive = false;
+    }
+
+    if(!that.alive){
+        that.died();
     }
 
     if(that.step != 0){
@@ -80,7 +93,7 @@ Snake.prototype.update = function(that, grid){
             //-------- If snake falls on itself - die -------//
 
             if(that.snakeA[0][0] == that.snakeA[i][0] && that.snakeA[0][1] == that.snakeA[i][1]){
-                //that.died();
+                that.died();
             }
             that.snakeA[i][0] = prev[0];
             that.snakeA[i][1] = prev[1];
@@ -181,8 +194,6 @@ Snake.prototype.toGrid = function(){
 //Draw snake on canvas and upgrade the grid position if the snake has died.
 Snake.prototype.draw = function(ctx){
 
-    //console.log("Val " + this.snakeA[0][1] + " color " + this.color);
-
     ctx.fillStyle = this.color;
 
     for(var i = 0; i < this.snakeA.length; i++){
@@ -267,7 +278,6 @@ Snake.prototype.stepUp = function(){
 }
 
 Snake.prototype.setStep = function(newStep){
-    //console.log("LocalStep " + newStep);
     this.step = newStep;
 }
 
@@ -301,4 +311,12 @@ Snake.prototype.setTurnDir = function(turnDir) {
 
 Snake.prototype.getTurnDir = function() {
     return this.turnDir;
+};
+
+Snake.prototype.setAlive = function(alive) {
+    this.alive = alive;
+};
+
+Snake.prototype.getAlive = function() {
+    return this.alive;
 };

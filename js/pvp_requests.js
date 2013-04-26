@@ -46,7 +46,9 @@ function joinPvP(lP, type){
             else if(msg != '')
             {
                 $('.info').html('<div>Join Room ' + msg +
-                    '</div><a href="../pvp/'+ msg +'">Enter</a>');
+                    '</div><a>Enter</a>');
+                $('.info a').on('click', function(){ updateUserRoom(msg, function()
+                    {window.location.href = '../pvp/' + msg})});
             }else{
                 $('.info').html('<div>No room found</div><input type="button" value="Refresh" class="refresh">');
                 $('.refresh').on('click', currentPvP);

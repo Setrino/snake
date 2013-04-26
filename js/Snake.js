@@ -233,7 +233,6 @@ Snake.prototype.getStep = function(){
 };
 
 Snake.prototype.setStep = function(newStep){
-    console.log("Step " + newStep);
     this.step = newStep;
 }
 
@@ -259,6 +258,14 @@ Snake.prototype.getArray = function() {
 
 Snake.prototype.setArray = function(newArray) {
     this.snakeA = newArray.slice();
+};
+
+Snake.prototype.setAlive = function(alive) {
+    this.alive = alive;
+};
+
+Snake.prototype.getAlive = function() {
+    return this.alive;
 };
 
 // Export the Snake class so you can use it in
