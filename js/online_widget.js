@@ -47,4 +47,15 @@ $(document).ready(function(){
         count.load("../templates/no_online.php");
         setTimeout(checkOnline, 30000);
     }
+
+    /*
+        function reposition(){
+
+            $('.onlineWidget').css({
+                left: $(window).width() * 0.85 - $('.onlineWidget').width()
+            });
+        }
+
+        $(window).bind('resize', reposition);
+    */
 });

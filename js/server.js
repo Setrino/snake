@@ -92,7 +92,7 @@ function onClientDisconnect() {
 
 	// Player not found
 	if (!removePlayer) {
-		util.log("Player not found: "+this.id);
+		util.log("Player not found: " + this.id);
 		return;
 	};
 
@@ -100,6 +100,13 @@ function onClientDisconnect() {
         room = players[t];
         for(s in room){
             if(room[s].id == this.id){
+                util.log(t);
+                if(getRoomStatus(t) == 2){
+                    //---- UNCOMMENT ----//
+                    //removeRoomDB(t, room[s].getNick());
+                    //---- UNCOMMENT ----//
+                }
+
                 // Remove player from players array
                 room.splice(room.indexOf(room[s], 1));
                 // Broadcast removed player to connected socket clients
@@ -422,6 +429,24 @@ function setTeamWonDB(roomName, team_won, callback){
     mysql.query('UPDATE rooms SET won_by=' + team_won + ' WHERE name=?', roomName, function(err, results){
         if(!err){
             callback();
+        }else{
+            throw err;
+        }
+    });
+}
+
+//Remove the user from the room and update his room to empty
+function removeRoomDB(roomName, nick){
+
+    mysql.query('DELETE FROM ' + roomName + ' WHERE nick=?', nick, function(err, results){
+        if(!err){
+            mysql.query('UPDATE online SET room=\'\' WHERE nick=?', nick, function(err, results){
+                if(!err){
+
+                }else{
+                    throw err;
+                }
+            });
         }else{
             throw err;
         }
