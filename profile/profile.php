@@ -34,7 +34,8 @@ if(!isset($_GET['nick'])){
 
 $getNickURL = $_GET['nick'];
 $query = mysql_query("SELECT * from users WHERE nick='$getNickURL'") or die(mysql_error());
-$getEmail = mysql_fetch_array($query)['email'];
+$array = mysql_fetch_array($query);
+$getEmail = $array['email'];
 
 if($_SESSION['id']){
 

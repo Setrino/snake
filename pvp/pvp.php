@@ -33,7 +33,9 @@ if(!isset($_GET['name'])){
 
 $checkRoom = mysql_query("SELECT name FROM rooms WHERE name='".$_GET['name']."'") or die(mysql_error());
 
-if(!mysql_fetch_array($checkRoom)['name']){
+$array = mysql_fetch_array($checkRoom);
+
+if(!$array['name']){
     header("Location: ../404.html");
     exit;
 }
@@ -43,8 +45,8 @@ if($_SESSION['id']){
     $getNick = $_SESSION['nick'];
     $query = mysql_query("SELECT room FROm online WHERE nick='$getNick'") or die(mysql_error());
     //$query = mysql_query("SELECT * from $getTable WHERE nick='$getNick'") or die(mysql_error());
-
-    $getRoom = mysql_fetch_array($query)['room'];
+    $array = mysql_fetch_array($query);
+    $getRoom = $array['room'];
 
     if(!$getRoom || $getRoom != $getTable)
         $err[] = 'You are not part of this room';

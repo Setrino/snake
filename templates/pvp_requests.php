@@ -267,7 +267,9 @@ if(isset($_POST['nick']) && isset($_POST['room'])){
 
     if($query){
 
-        echo mysql_fetch_array($query, MYSQL_ASSOC)['room'];
+        $array = mysql_fetch_array($query, MYSQL_ASSOC);
+
+        echo $array['room'];
 
     }else{
         echo 'ERROR';

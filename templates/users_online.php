@@ -42,11 +42,14 @@ $result = mysql_query("	SELECT nick,status
 $msg = '';
 while($row=mysql_fetch_assoc($result))
 {
+
+    $array = mysql_fetch_row(mysql_query("SELECT avatar FROM users
+             WHERE nick='".$row['nick']."'"));
+
 	$msg .=
 	'<div class="geoRow">
 	    <a href="../profile/'.$row['nick'].'" class="user_link">
-            <div class="avatar"><img src="'.mysql_fetch_row(mysql_query("SELECT avatar FROM users
-             WHERE nick='".$row['nick']."'"))[0].'" width="11" height="11" /></div>';
+            <div class="avatar"><img src="'.$array[0].'" width="11" height="11" /></div>';
 
     if($_SESSION['id']){
                 if($row['nick'] != $_SESSION['nick']){

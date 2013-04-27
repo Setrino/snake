@@ -7,7 +7,7 @@ session_start();
 define('INCLUDE_CHECK',true);
 
 require_once "login.php";
-require "functions.php";
+require_once "functions.php";
 
 // We don't want web bots scewing our stats:
 if(is_bot()) die();
@@ -18,7 +18,9 @@ if($_SESSION['id']){
 // Checking wheter the visitor is already marked as being online:
     $status = mysql_query("SELECT status FROM online WHERE id='".$_SESSION['id']."'");
 
-    if(mysql_fetch_row($status)[0] == 0){
+    $status_row = mysql_fetch_row($status);
+
+    if($status_row[0] == 0){
 
         mysql_query("UPDATE online SET status=1 WHERE id='".$_SESSION['id']."'");
         mysql_query("UPDATE online SET last_on=NOW() WHERE id='".$_SESSION['id']."'");

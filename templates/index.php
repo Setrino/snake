@@ -21,12 +21,14 @@ $_SESSION['last_on'] = time();
 function killSession(){
 
     $query =  mysql_query("SELECT room FROM online WHERE id='".$_SESSION['id']."'") or die(mysql_error());
-    $room = mysql_fetch_array($query, MYSQL_ASSOC)['room'];
+    $array = mysql_fetch_array($query, MYSQL_ASSOC);
+    $room = $array['room'];
 
     if($room != '' || $room != null){
     $query = mysql_query("SELECT rooms.id FROM rooms INNER JOIN online ON rooms.name='$room'")
         or die(mysql_error());
-    $id = mysql_fetch_array($query, MYSQL_ASSOC)['id'];
+    $array = mysql_fetch_array($query, MYSQL_ASSOC);
+    $id = $array['id'];
 
         if($id != '' || $id != null){
 
