@@ -72,6 +72,46 @@ if(!count($err)){
 
 <body>
     <div>
+        <div class="pvp_container0">
+            <div id='team0' class='team'>
+                Team 0
+                <hgroup>
+                    <h1>Lex</h1>
+                    <ul>
+                        <li>Size: 5</li>
+                        <li>Status: Online</li>
+                    </ul>
+                </hgroup>
+                <hgroup>
+                    <h1>Setrino</h1>
+                    <ul>
+                        <li>Size: 5</li>
+                        <li>Status: Online</li>
+                    </ul>
+                </hgroup>
+            </div>
+            <br />
+            <br />
+            <br />
+            <br />
+            <div id='team1' class='team'>
+                Team 1
+                <hgroup>
+                    <h1>Setrino</h1>
+                    <ul>
+                        <li>Size: 5</li>
+                        <li>Status: Online</li>
+                    </ul>
+                </hgroup>
+                <hgroup>
+                    <h1>Setrino</h1>
+                    <ul>
+                        <li>Size: 5</li>
+                        <li>Status: Online</li>
+                    </ul>
+                </hgroup>
+            </div>
+        </div>
         <div class="pvp_container">
             <canvas id="gameCanvas"></canvas>
             </div>

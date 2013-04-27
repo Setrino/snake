@@ -294,7 +294,7 @@ function resizeContainers(){
     $(document).ready(function(){
         $('.pvp_container').css({
             width: canvas.width + 30,
-            marginLeft: ($(window).width() - $('.pvp_container').width() - 100) / 2
+            left: 20
         });
         $('.pvp_container1').css({
             height: $('.pvp_container').height()
@@ -304,6 +304,11 @@ function resizeContainers(){
         });
         $('#message').css({
             width: $('#chat').width() - $('.btn')
+        });
+        $('.pvp_container0').css({
+            marginLeft: ($(window).width() - ($('.pvp_container0').width() + 60 +
+                $('.pvp_container').width() + $('.pvp_container1').width()))/2,
+            height: $('.pvp_container').height()
         });
     });
 }

@@ -64,7 +64,7 @@ h2{
     border-radius:20px;
 }
 
-.pvp_container{
+.pvp_container, .pvp_container0, .pvp_container1{
 
     margin: 0 auto;
     margin-top:20px;
@@ -81,22 +81,37 @@ h2{
     border-radius:20px;
 }
 
+.pvp_container0{
+
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
 .pvp_container1{
 
-    margin: auto;
-    margin-top:20px;
     margin-left: 20px;
-    float: left;
+}
 
-    background:#FFFFFF;
-    border:1px solid #E0E0E0;
-    padding:30px;
+.team{
+    margin-top: 5px;
+    font-size: 20px;
+    border-bottom: 1px solid #E0E0E0;
+    width: 120px;
+}
 
-    /* Rounded corners */
-    -moz-border-radius:20px;
-    -khtml-border-radius: 20px;
-    -webkit-border-radius: 20px;
-    border-radius:20px;
+hgroup{
+    margin-top: 5px;
+    font-size: 12px;
+}
+
+hgroup h1{
+    font-size: 14px;
+    color: #888888;
+}
+
+hgroup ul{
+    text-align: left;
+    margin-top: 5px;
 }
 
 .submit_container{
