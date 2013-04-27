@@ -143,6 +143,7 @@ function onLocalPlayer(data){
             pvpNo: pvpNo});
 
     gameLoop();
+    resizeContainers();
 }
 
 // Socket disconnected
@@ -284,6 +285,28 @@ function animate() {
 /**************************************************
 ** GAME DRAW
 **************************************************/
+
+/**************************************************
+ ** REDRAW CONTAINER
+ **************************************************/
+function resizeContainers(){
+
+    $(document).ready(function(){
+        $('.pvp_container').css({
+            width: canvas.width + 30,
+            marginLeft: ($(window).width() - $('.pvp_container').width() - 100) / 2
+        });
+        $('.pvp_container1').css({
+            height: $('.pvp_container').height()
+        });
+        $('#chat').css({
+            height: $('.pvp_container1').height() - 50
+        });
+        $('#message').css({
+            width: $('#chat').width() - $('.btn')
+        });
+    });
+}
 
 /**************************************************
 ** GAME HELPER FUNCTIONS

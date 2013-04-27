@@ -9,6 +9,7 @@ var width = 500,
   startGame = true,
   endGame = false,
   endGamePrev = false,
+  pageReload = true,
 
   grid = null,
   snakes = [],
@@ -590,7 +591,10 @@ function gameOver(){
     ctx.fillText("GAME OVER", width / 2 - 40, height / 2 - 40);
     ctx.fillText("YOUR RESULT:" + snakes[0][0].sweets, width / 2 - 50, height / 2 - 20);
     */
+    if(!pageReload){
     doOverlayOpen();
+    }
+    pageReload = false;
 }
 
 function aiLogic(){
@@ -901,7 +905,7 @@ $(document).ready(function(){
 
     alignLaunchLink();
     endGame = true;
-    doOverlayOpen();
+    //doOverlayOpen();
 
     $(window).bind('resize',showOverlayBox);
 // activate when the link with class launchLink is clicked
@@ -910,4 +914,8 @@ $(document).ready(function(){
     $('a.closeLink').click(doOverlayClose);
 // reset the game
     $('input.restart').click(restart);
+// pop up for the main_menu
+    $('a.m_play').click(function(){ personalRoom('', true); });
+// not login pop up
+    $('.m_notLogin').click(loginNoty);
 });

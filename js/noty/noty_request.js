@@ -165,8 +165,8 @@ function joinRoom(from, text, type){
     });
 }
 
-// check whether you already have a room for yourself
-function personalRoom(text){
+// check whether you already have a room for yourself, play is passed when click on play icon
+function personalRoom(text, play){
 
     if(text != ''){
         displayRoomNoty(text);
@@ -174,6 +174,9 @@ function personalRoom(text){
         roomPresence(function(room){
             if(room != '' && room != null && room != undefined){
                 displayRoomNoty(room);
+            }else{
+                if(play)
+                doOverlayOpen();
             }
         });
     }
@@ -198,6 +201,18 @@ function displayRoomNoty(text){
                 }
             }
         ]});
+}
+
+function loginNoty(){
+    var l = noty({
+        text: 'You are not logged in',
+        type: 'warning',
+        dismissQueue: true,
+        layout: layout,
+        theme: 'defaultTheme'
+        });
+
+    setTimeout(function(){l.close()}, 2500);
 }
 
 function promptNotifications(user, callback){

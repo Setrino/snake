@@ -230,7 +230,8 @@ if($_SESSION['msg'])
     <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="../css/game.css" media="screen"/>
     <link rel="stylesheet" type="text/css" href="../css/buttons.css" media="screen" />
-    <script lang="javascript" src="../js/jquery-1.9.1.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../css/main_menu.css" media="screen" />
+    <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
     
     <!-- PNG FIX for IE6 -->
     <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
@@ -339,13 +340,44 @@ if($_SESSION['msg'])
 	
 </div> <!--panel -->
 
+<nav id="main_menu">
+    <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Shop</a>
+            <ul>
+                <li><a href="#">Body paint</a></li>
+                <li><a href="#">Items</a></li>
+                <li><a href="#">Power Ups</a></li>
+            </ul>
+        </li>
+        <li><?php if($_SESSION['id']): ?>
+                <a class="m_play">Play</a></li>
+            <?php else: ?>
+                <a class="m_notLogin">Play</a>
+            <?php endif; ?>
+        <li><?php if($_SESSION['id']): ?>
+                <a href='../profile/<?php echo $_SESSION['nick']?>'>Profile</a>
+            <?php else: ?>
+                <a class="m_notLogin">Profile</a>
+            <?php endif; ?>
+            <ul>
+                <li><a href="#">Leaderboards</a></li>
+            </ul>
+        </li>
+        <li><a href="#">About</a>
+            <ul>
+                <li><a href="#">How to play</a></li>
+                <li><a href="#">FAQ</a></li>
+                <li><a href="#">About us</a></li>
+            </ul>
+        </li>
+    </ul>
+</nav>
+
 <div class="pageContent">
     <div id="main">
       <div class="container">
         <h1>Snake MMO</h1>
-          <?php if($_SESSION['id']): ?>
-          <a href='../profile/<?php echo $_SESSION['nick']?>'>Profile</a>
-          <?php endif; ?>
         <h2>Online Canvas game of Snake</h2>
         </div>
       <div class="container">
