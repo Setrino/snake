@@ -27,14 +27,21 @@ $query = '';
 $err = array();
 
 if(!isset($_GET['name'])){
-    header("Location: ../404");
+    header("Location: ../404.html");
+    exit;
+}
+
+$checkRoom = mysql_query("SELECT name FROM rooms WHERE name='".$_GET['name']."'") or die(mysql_error());
+
+if(!mysql_fetch_array($checkRoom)['name']){
+    header("Location: ../404.html");
     exit;
 }
 
 if($_SESSION['id']){
     $getTable = $_GET['name'];
     $getNick = $_SESSION['nick'];
-    $query = mysql_query("SELECT room from online WHERE nick='$getNick'") or die(mysql_error());
+    $query = mysql_query("SELECT room FROm online WHERE nick='$getNick'") or die(mysql_error());
     //$query = mysql_query("SELECT * from $getTable WHERE nick='$getNick'") or die(mysql_error());
 
     $getRoom = mysql_fetch_array($query)['room'];
