@@ -137,10 +137,10 @@ function onLocalPlayer(data){
 
     snakeT.push(localPlayer);
 
-    socket.emit("new player", {nick : localPlayer.getNick(), size: localPlayer.getSize(), x: localPlayer.getX(),
-        y: localPlayer.getY(), orgDir: localPlayer.getDir(), color: localPlayer.getColor(),
-        ai: localPlayer.getAi(), number: localPlayer.getNumber(), team: localPlayer.getTeam(), room: sessionRoom,
-            pvpNo: pvpNo});
+    socket.emit("new player", {nick : localPlayer.getNick(), size: localPlayer.getSize(),
+        x: localPlayer.getX(), y: localPlayer.getY(), orgDir: localPlayer.getDir(),
+            color: localPlayer.getColor(), ai: localPlayer.getAi(), number: localPlayer.getNumber(),
+                team: localPlayer.getTeam(), room: sessionRoom, pvpNo: pvpNo});
 
     gameLoop();
     resizeContainers();
@@ -163,6 +163,8 @@ function onNewPlayer(data) {
         //snakes.splice(1, 1);
         snakeT.push(newPlayer);
     }
+
+    updateUserDetails(data.team, data.nick, data.size, data.color, 0);
 };
 
 // Move player
@@ -184,6 +186,7 @@ function onMovePlayer(data) {
         movePlayer.setArray(data.snakeA);
 
         if(data.alive == false){
+            updateUserStatus(movePlayer.getNick(), 2);
             movePlayer.setAlive(false);
             movePlayer.died();
         }
@@ -532,4 +535,36 @@ var gameLoop = function(){
     }else{
         gameOver();
     }
+}
+
+function updateUserDetails(team, nick, size, color, status){
+
+    size = 'Size: ' + size;
+
+    $('#team' + team).append('<hgroup class=' + nick + '><h2>' + nick + '</h2><ul><li>' + size +
+        '</li><li class="p_status">' + statusSwitch(status) + '</li></ul></hgroup>');
+    $('hgroup.' + nick + ' h2').css('color', color);
+}
+
+function updateUserStatus(nick, status){
+
+    $('hgroup.' + nick + ' ul li.p_status').html(statusSwitch(status));
+}
+
+function statusSwitch(status){
+
+    state = 'Status: ';
+
+    switch(status){
+        case 0:
+            state += 'Online';
+            break;
+        case 1:
+            state += 'Playing';
+            break;
+        case 2:
+            state += 'Dead';
+            break;
+    }
+    return state;
 }

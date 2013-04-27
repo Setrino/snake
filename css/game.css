@@ -94,19 +94,30 @@ h2{
 
 .team{
     margin-top: 5px;
+    padding: 5px;
     font-size: 20px;
-    border-bottom: 1px solid #E0E0E0;
+    color: #888888;
     width: 120px;
 }
 
-hgroup{
-    margin-top: 5px;
-    font-size: 12px;
+.team h1{
+    font-size: 20px;
+    color: #888888;
 }
 
-hgroup h1{
+.team h2{
+    font-weight: bold;
+    font-family: "Trebuchet MS",Arial, Helvetica, sans-serif;
+    letter-spacing: 1px;
+    text-transform: none;
     font-size: 14px;
-    color: #888888;
+    color: #000000;
+}
+
+hgroup{
+    color: #000000;
+    margin-top: 5px;
+    font-size: 12px;
 }
 
 hgroup ul{
