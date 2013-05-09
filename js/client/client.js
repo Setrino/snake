@@ -52,6 +52,7 @@ var setEventHandlers = function() {
 	// Keyboard
 	window.addEventListener("keypress", onKeyPress, false);
 	window.addEventListener("keyup", onKeyUp, false);
+    window.addEventListener("keydown", onKeyDown, false);
 
 	// Window resize
 	//window.addEventListener("resize", onResize, false);
@@ -97,6 +98,13 @@ function onKeyUp(e) {
 		keys.onKeyUp(localPlayer, e);
 	};
 };
+
+// Keyboard key down
+function onKeyDown(e){
+    if (localPlayer){
+        keys.onKeyDown(localPlayer,e);
+    }
+}
 
 // Browser window resize
 function onResize(e) {

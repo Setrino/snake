@@ -2,6 +2,8 @@
 ** GAME KEYBOARD CLASS
 **************************************************/
 var Keys = function() {
+
+    var arrows = [37, 38, 39, 40];
 		
 	var onKeyPress = function(snake, e) {
         var temp = e.charCode;
@@ -40,7 +42,6 @@ var Keys = function() {
 	};
 	
 	var onKeyUp = function(snake, e) {
-        e.preventDefault();
         e = e || window.event;
         if(!$('#message').is(':focus')){
             switch(e.keyCode){
@@ -64,8 +65,20 @@ var Keys = function() {
         }
 	};
 
+    var onKeyDown = function(snake, e){
+
+        var key = e.which;
+
+        if($.inArray(key, arrows) > - 1){
+            e.preventDefault();
+            return false;
+        }
+        return true;
+    };
+
 	return {
 		onKeyPress: onKeyPress,
-		onKeyUp: onKeyUp
+		onKeyUp: onKeyUp,
+        onKeyDown: onKeyDown
 	};
 };
