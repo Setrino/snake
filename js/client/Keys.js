@@ -8,6 +8,7 @@ var Keys = function() {
         if(e.charCode > 96 && e.charCode < 123){
             temp -= 32;
         }
+        // Check if not in the chat box
         if(!$('#message').is(':focus')){
             switch(temp){
                 //W 87
@@ -39,8 +40,8 @@ var Keys = function() {
 	};
 	
 	var onKeyUp = function(snake, e) {
+        e.preventDefault();
         e = e || window.event;
-
         if(!$('#message').is(':focus')){
             switch(e.keyCode){
                 //Up 38

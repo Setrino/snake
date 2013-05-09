@@ -724,6 +724,18 @@ function closestEnemy(team, p, snake, head){
     }
 }
 
+document.onkeydown = function(e){
+
+    var arrows = [37, 38, 39, 40];
+    var key = e.which;
+
+    if($.inArray(key, arrows) > -1){
+        e.preventDefault();
+        return false;
+    }
+    return true;
+}
+
 document.onkeypress = function(e){
 
     var temp = e.charCode;
