@@ -16,14 +16,14 @@ $stringIp = $_SERVER['REMOTE_ADDR'];
 
 if($_SESSION['id']){
 // Checking wheter the visitor is already marked as being online:
-    $status = mysql_query("SELECT status FROM online WHERE id='".$_SESSION['id']."'");
+    $status = mysql_query("SELECT status FROM online WHERE nick='".$_SESSION['nick']."'");
 
     $status_row = mysql_fetch_row($status);
 
     if($status_row[0] == 0){
 
-        mysql_query("UPDATE online SET status=1 WHERE id='".$_SESSION['id']."'");
-        mysql_query("UPDATE online SET last_on=NOW() WHERE id='".$_SESSION['id']."'");
+        mysql_query("UPDATE online SET status=1 WHERE nick='".$_SESSION['nick']."'");
+        mysql_query("UPDATE online SET last_on=NOW() WHERE nick='".$_SESSION['nick']."'");
 
         }
 }

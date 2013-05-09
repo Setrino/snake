@@ -85,17 +85,24 @@ if($_POST['submit']=='Register')
         mysql_query("	INSERT INTO passwords(nick,pass)
 						VALUES(
 							'".$_POST['username']."',
-							'".md5($pass)."'
+							'".$pass."'
 						)");
 
-        if(mysql_affected_rows($link)==1)
+        mysql_query("	INSERT INTO online(nick,last_on)
+						VALUES(
+							'".$_POST['username']."',
+							NOW()
+						)");
+
+        if(mysql_affected_rows($link) >= 0)
         {
             send_mail(	'info@fkdn-lab.com',
                 $_POST['email'],
                 'Snake MMO Registration',
                 'Your password is: '.$pass);
 
-            $_SESSION['msg']['reg-success']='We sent you an email with your new password!';
+            $_SESSION['msg']['reg-success']='We sent you an email ' .$_POST['email'].
+                ' with your password!';
         }
         else $err[]='This username is already taken!';
     }

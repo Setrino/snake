@@ -20,7 +20,7 @@ $_SESSION['last_on'] = time();
 
 function killSession(){
 
-    $query =  mysql_query("SELECT room FROM online WHERE id='".$_SESSION['id']."'") or die(mysql_error());
+    $query =  mysql_query("SELECT room FROM online WHERE nick='".$_SESSION['nick']."'") or die(mysql_error());
     $array = mysql_fetch_array($query, MYSQL_ASSOC);
     $room = $array['room'];
 
@@ -40,7 +40,7 @@ function killSession(){
 
     mysql_query("DELETE FROM notifications WHERE nick='".$_SESSION['nick']."'
         || from_who='".$_SESSION['nick']."'") or die (mysql_error());
-    mysql_query("UPDATE online SET status=0, room='', last_on=NOW() WHERE id='".$_SESSION['id']."'")
+    mysql_query("UPDATE online SET status=0, room='', last_on=NOW() WHERE nick='".$_SESSION['nick']."'")
         or die (mysql_error());
     $_SESSION = array();
     session_destroy();
@@ -83,13 +83,13 @@ if($_POST['submit']=='Login')
 
 		// Escaping all input data
 
-        $row = mysql_fetch_assoc(mysql_query("SELECT nick FROM users WHERE nick='{$_POST['username']}'"));
+        $row_u = mysql_fetch_assoc(mysql_query("SELECT id, nick FROM users WHERE nick='{$_POST['username']}'"));
 
-        if(!$row['nick'])
+        if(!$row_u['nick'])
         {
             $err[]= 'Such username does not exist';
         }else{
-            $row = mysql_fetch_assoc(mysql_query("SELECT id,nick FROM passwords WHERE nick='{$_POST['username']}'
+            $row = mysql_fetch_assoc(mysql_query("SELECT nick FROM passwords WHERE nick='{$_POST['username']}'
              AND pass='{$_POST['password']}'"));
 
             if($row['nick'])
@@ -97,7 +97,7 @@ if($_POST['submit']=='Login')
                 // If everything is OK login
 
                 $_SESSION['nick']=$row['nick'];
-                $_SESSION['id'] = $row['id'];
+                $_SESSION['id'] = $row_u['id'];
                 $_SESSION['rememberMe'] = $_POST['rememberMe'];
                 $_SESSION['last_on'] = time();
 

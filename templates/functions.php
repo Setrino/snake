@@ -7,18 +7,40 @@ function checkEmail($str)
 	return preg_match("/^[\.A-z0-9_\-\+]+[@][A-z0-9_\-]+([.][A-z0-9_\-]+)+[A-z]{1,4}$/", $str);
 }
 
+function send_mail($from, $to, $subject, $body) {
+    $ch = curl_init();
 
-function send_mail($from,$to,$subject,$body)
+    curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_setopt($ch, CURLOPT_USERPWD, 'api:key-1vjt41z33cqguafnv0exqlwzins9pcq3');
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+    curl_setopt($ch, CURLOPT_URL, 'https://api.mailgun.net/v2/snake.mailgun.org/messages');
+    curl_setopt($ch, CURLOPT_POSTFIELDS, array('from' => 'Snake MMO <info@snake.mailgun.org>',
+        'to' => $to,
+        'subject' => $subject,
+        'text' => $body));
+
+    $result = curl_exec($ch);
+    curl_close($ch);
+
+    return $result;
+}
+
+function send_mail_old($from,$to,$subject,$body)
 {
-	$headers = '';
-	$headers .= "From: $from\n";
-	$headers .= "Reply-to: $from\n";
-	$headers .= "Return-Path: $from\n";
-	$headers .= "Message-ID: <" . md5(uniqid(time())) . "@" . $_SERVER['SERVER_NAME'] . ">\n";
-	$headers .= "MIME-Version: 1.0\n";
-	$headers .= "Date: " . date('r', time()) . "\n";
 
-	mail($to,$subject,$body,$headers);
+    //ini_set("sendmail_from", $from);
+
+    $headers = '';
+    $headers .= "From: $from\n";
+    $headers .= "Reply-to: $from\n";
+    $headers .= "Return-Path: $from\n";
+    $headers .= "Message-ID: <" . md5(uniqid(time())) . "@" . $_SERVER['SERVER_NAME'] . ">\n";
+    $headers .= "MIME-Version: 1.0\n";
+    $headers .= "Date: " . date('r', time()) . "\n";
+
+    mail($to,$subject,$body,$headers);
 }
 
 function get_tag($tag,$xml)
