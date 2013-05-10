@@ -136,12 +136,13 @@ if($_SESSION['msg'])
 }
 ?>
 
-<head>
+<head xmlns="http://www.w3.org/1999/html">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title></title>
+    <title>Snake MMO Registration form</title>
 
-    <link rel="stylesheet" type="text/css" href="../css/game.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />
+    <!--<link rel="stylesheet" type="text/css" href="../css/game.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />-->
+    <link rel="stylesheet" type="text.css" href="../css/register.css" media="screen">
 
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
     <script type="text/javascript" src="../js/reg_check.js"></script>
@@ -158,10 +159,11 @@ if($_SESSION['msg'])
 </head>
 
 <body>
-    <div class="left right">
+<section class="container">
+    <div class="login">
         <!-- Register Form -->
         <form action="" id="reg_form" method="post">
-            <h1>Not a member yet? Sign Up!</h1>
+            <h1>Register at Snake MMO</h1>
 
             <?php
 
@@ -177,26 +179,36 @@ if($_SESSION['msg'])
                 unset($_SESSION['msg']['reg-success']);
             }
             ?>
-                <span><div><label class="grey" for="username">Username:</label>
-                <input class="field" type="text" name="username" id="username" value="<?php if($_SESSION['nick'])
-                {echo $_SESSION['nick']; unset($_SESSION['nick']);} ?>" size="23" />
-                </div>
-                <div id="status" class="status"></div></span>
 
-                <div><label class="grey" for="password">Password:</label>
-                <input class="field" type="password" name="password" id="password" value="" size="23" />
-                </div>
-                <div id="status_p" class="status"></div>
+                <p>
+                    <div>
+                        <input type="text" name="username" id="username" placeholder="Username" value="<?php if($_SESSION['nick'])
+                        {echo $_SESSION['nick']; unset($_SESSION['nick']);} ?>" size="23" />
+            <div id="status" class="status">
+                
+            </div>
+                        </div>
 
-                <label class="grey" for="email">Email:</label>
-                <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
-                {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" size="23" />
-                <div id="status_e" class="status"></div>
+                </p>
 
-                <input type="submit" name="submit" value="Register" class="bt_register"/>
+                <p>
+                        <div>
+                        <input type="password" name="password" id="password" value="" placeholder="Password" size="23" />
+                        </div>
+                        <div id="status_p" class="status"></div>
+                </p>
+
+                <p>
+                    <div>
+                    <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
+                    {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" placeholder="Email" size="23" />
+                    <div id="status_e" class="status"></div>
+                </p>
+
+                <p class="submit"><input type="submit" name="submit" value="Register"></p>
                 <div id="status_r" class="status"></div>
         </form>
-            <a href="index.php">Return to main page</a>
+            <p><a href="index.php" class="return">Return to main page</a></p>
     </div>
 </body>
             

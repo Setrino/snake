@@ -23,7 +23,7 @@ if(usr.length > 3)
                 {
                     $("#username").removeClass('object_error'); // if necessary
                     $("#username").addClass("object_ok");
-                    $(this).html('&nbsp;<img src="../images/tick.gif" align="absmiddle">');
+                    $(this).html('<img src="../images/tick.gif" align="absmiddle">');
                 }
                 else
                 {
@@ -63,7 +63,7 @@ $("#password").change(function(){
                 {
                     $("#password").removeClass('object_error'); // if necessary
                     $("#password").addClass("object_ok");
-                    $(this).html('&nbsp;<img src="../images/tick.gif" align="absmiddle">');
+                    $(this).html('<img src="../images/tick.gif" align="absmiddle">');
                 }
                 else
                 {
@@ -101,7 +101,7 @@ $("#email").change(function() {
                         {
                             $("#email").removeClass('object_error'); // if necessary
                             $("#email").addClass("object_ok");
-                            $(this).html('&nbsp;<img src="../images/tick.gif" align="absmiddle">');
+                            $(this).html('<img src="../images/tick.gif" align="absmiddle">');
                         }
                         else
                         {
