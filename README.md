@@ -9,9 +9,9 @@ The game uses **[node.js](http://nodejs.org/)** server which
 you need to install to run the game. Also you need to install
 a couple of node-modules:
 
-*[socket.io](http://socket.io/) *Required*
--[node-mysql](https://github.com/felixge/node-mysql) *Required*
-*[forever.js](https://github.com/nodejitsu/forever) *Optional*
+* [socket.io](http://socket.io/) *Required*
+* [node-mysql](https://github.com/felixge/node-mysql) *Required*
+* [forever.js](https://github.com/nodejitsu/forever) *Optional*
 
 If you are running on localhost:
 ---------------------
