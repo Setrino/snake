@@ -528,6 +528,7 @@ function removeNotifications(nick){
     });
 }
 
+// Update rooms and remove the one empty ones per 1 hour
 function updateRooms(){
 
     mysql.query('SELECT * FROM rooms', function(err, results){

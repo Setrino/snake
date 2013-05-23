@@ -145,8 +145,9 @@ if($_SESSION['msg'])
         <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />-->
         <link rel="stylesheet" type="text/css" href="../css/register.css" media="screen">
 
-        <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
         <script type="text/javascript" src="../js/reg_check.js"></script>
+        <script type="text/javascript" src='../js/mobile.js'></script>
 
         <!-- PNG FIX for IE6 -->
         <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
