@@ -33,9 +33,10 @@ a couple of node-modules:
 * Change in the ../js/client/client.js file the localhost to your URI
 (e.g. http://localhost -> http://google.com)
 
-* Follow the steps as above (to start node.js you will probably need
-SSH or Telnet access to your server. If you don't have them, you cannot
-install nor run node.js).
+* Follow the steps as above for running on localhost.
+
+*Note: Start node.js you will probably need SSH or Telnet access to your server.*
+*If you don't have them, you cannot install nor run node.js).*
 
 =========
 **Happy Snaking!**
