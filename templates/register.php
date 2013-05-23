@@ -135,80 +135,81 @@ if($_SESSION['msg'])
 
 }
 ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Snake MMO Registration form</title>
 
-<head xmlns="http://www.w3.org/1999/html">
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <title>Snake MMO Registration form</title>
+        <!--<link rel="stylesheet" type="text/css" href="../css/game.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />-->
+        <link rel="stylesheet" type="text/css" href="../css/register.css" media="screen">
 
-    <!--<link rel="stylesheet" type="text/css" href="../css/game.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="../css/slide.css" media="screen" />-->
-    <link rel="stylesheet" type="text.css" href="../css/register.css" media="screen">
+        <script type="text/javascript" src="../js/jquery-1.9.1.min.js"></script>
+        <script type="text/javascript" src="../js/reg_check.js"></script>
 
-    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.3.2/jquery.min.js"></script>
-    <script type="text/javascript" src="../js/reg_check.js"></script>
+        <!-- PNG FIX for IE6 -->
+        <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
+        <!--[if lte IE 6]>
+        <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
+        <![endif]-->
 
-    <!-- PNG FIX for IE6 -->
-    <!-- http://24ways.org/2007/supersleight-transparent-png-in-ie6 -->
-    <!--[if lte IE 6]>
-    <script type="text/javascript" src="../js/pngfix/supersleight-min.js"></script>
-    <![endif]-->
+        <script src="../js/slide.js" type="text/javascript"></script>
 
-    <script src="../js/slide.js" type="text/javascript"></script>
+        <?php echo $script; ?>
+    </head>
 
-    <?php echo $script; ?>
-</head>
+    <body>
+    <section class="container">
+        <div class="login">
+            <!-- Register Form -->
+            <form action="" id="reg_form" method="post">
+                <h1>Register at Snake MMO</h1>
 
-<body>
-<section class="container">
-    <div class="login">
-        <!-- Register Form -->
-        <form action="" id="reg_form" method="post">
-            <h1>Register at Snake MMO</h1>
+                <?php
 
-            <?php
+                if($_SESSION['msg']['reg-err'])
+                {
+                    echo '<div class="err">'.$_SESSION['msg']['reg-err'].'</div>';
+                    unset($_SESSION['msg']['reg-err']);
+                }
 
-            if($_SESSION['msg']['reg-err'])
-            {
-                echo '<div class="err">'.$_SESSION['msg']['reg-err'].'</div>';
-                unset($_SESSION['msg']['reg-err']);
-            }
+                if($_SESSION['msg']['reg-success'])
+                {
+                    echo '<div class="success">'.$_SESSION['msg']['reg-success'].'</div>';
+                    unset($_SESSION['msg']['reg-success']);
+                }
+                ?>
 
-            if($_SESSION['msg']['reg-success'])
-            {
-                echo '<div class="success">'.$_SESSION['msg']['reg-success'].'</div>';
-                unset($_SESSION['msg']['reg-success']);
-            }
-            ?>
-
-                <p>
-                    <div>
-                        <input type="text" name="username" id="username" placeholder="Username" value="<?php if($_SESSION['nick'])
-                        {echo $_SESSION['nick']; unset($_SESSION['nick']);} ?>" size="23" />
-            <div id="status" class="status">
-                
-            </div>
-                        </div>
-
-                </p>
-
-                <p>
+                    <p>
                         <div>
-                        <input type="password" name="password" id="password" value="" placeholder="Password" size="23" />
-                        </div>
-                        <div id="status_p" class="status"></div>
-                </p>
+                            <input type="text" name="username" id="username" placeholder="Username" value="<?php if($_SESSION['nick'])
+                            {echo $_SESSION['nick']; unset($_SESSION['nick']);} ?>" size="23" />
+                <div id="status" class="status">
 
-                <p>
-                    <div>
-                    <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
-                    {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" placeholder="Email" size="23" />
-                    <div id="status_e" class="status"></div>
-                </p>
+                </div>
+                            </div>
 
-                <p class="submit"><input type="submit" name="submit" value="Register"></p>
-                <div id="status_r" class="status"></div>
-        </form>
-            <p><a href="index.php" class="return">Return to main page</a></p>
-    </div>
-</body>
-            
+                    </p>
+
+                    <p>
+                            <div>
+                            <input type="password" name="password" id="password" value="" placeholder="Password" size="23" />
+                            </div>
+                            <div id="status_p" class="status"></div>
+                    </p>
+
+                    <p>
+                        <div>
+                        <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
+                        {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" placeholder="Email" size="23" />
+                        <div id="status_e" class="status"></div>
+                    </p>
+
+                    <p class="submit"><input type="submit" name="submit" value="Register"></p>
+                    <div id="status_r" class="status"></div>
+            </form>
+                <p><a href="index.php" class="return">Return to main page</a></p>
+        </div>
+    </body>
+</html>
