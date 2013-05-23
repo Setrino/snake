@@ -312,7 +312,7 @@ if($_SESSION['msg'])
                 <h1>Members panel</h1>
 
                 <p>You can put member-only data here</p>
-                <a href="../profile/profile.php">View a special member page</a>
+                <a href=<?php echo '../profile/'.$_SESSION['nick'] ?> >View your page</a>
                 <p>- or -</p>
                 <a href="?logoff">Log off</a>
             </div>

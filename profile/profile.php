@@ -28,7 +28,7 @@ $err = array();
 $user = '';
 
 if(!isset($_GET['nick'])){
-    header("Location: ../404");
+    header("Location: ../404.html");
     exit;
 }
 
@@ -42,7 +42,7 @@ if($_SESSION['id']){
     $getNick = $_SESSION['nick'];
     //$query = mysql_query("SELECT * from $getTable WHERE nick='$getNick'") or die(mysql_error());
 
-    if($getNickURL != $getNick)
+    if($getNickURL == $getNick)
         $user = 'You are the user';
     else
         $user = 'You are just visiting this page';

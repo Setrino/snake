@@ -52,8 +52,25 @@ function init() {
 
 	// Start listening for events
 	setEventHandlers();
+    statusCheck();
+    roomsCheck();
 };
 
+// Update the user online status (set to 0 if absent for more than 30 min) + set room to '' every 2 minutes
+function statusCheck(){
+
+    updateUsers();
+
+    setTimeout(statusCheck, 120000);
+}
+
+// Update rooms and remove the empty ones every 1 hour
+function roomsCheck(){
+
+    updateRooms();
+
+    setTimeout(roomsCheck, 3600000);
+}
 
 /**************************************************
 ** GAME EVENT HANDLERS
@@ -447,6 +464,110 @@ function removeRoomDB(roomName, nick){
                     throw err;
                 }
             });
+        }else{
+            throw err;
+        }
+    });
+}
+
+//Update users online status and remove those who are inactive for more than 30 minutes
+function updateUsers(){
+
+    mysql.query('SELECT * FROM online WHERE status=1 || status=2', function(err, results){
+
+        if(!err){
+
+            for(r in results){
+
+                var query = results[r];
+                var room = query['room'];
+                var nick = query['nick'];
+                var timeDif = new Date() - query['last_on'];
+
+                if(timeDif > 10000){
+
+                    removeNotifications(nick);
+
+                        mysql.query("UPDATE online SET status=0, room='' WHERE nick=?", nick, function(err, results){
+
+                            if(!err){
+
+                                if(room != ''){
+
+                                    mysql.query('DELETE FROM ' + room + ' WHERE nick=?', nick, function(err, results){
+
+                                        if(!err){
+
+                                        }else{
+                                            throw err;
+                                        }
+                                    });
+                                }
+
+                            }else{
+                                throw err;
+                            }
+                        });
+                }
+            }
+        }else{
+            throw err;
+        }
+    });
+}
+
+function removeNotifications(nick){
+
+    mysql.query('DELETE FROM notifications WHERE nick=?',nick, function(err, results){
+
+        if(!err){
+
+        }else{
+            throw err;
+        }
+    });
+}
+
+function updateRooms(){
+
+    mysql.query('SELECT * FROM rooms', function(err, results){
+
+        if(!err){
+
+            for(r in results){
+
+                var query = results[r];
+                var name = query['name'];
+
+                mysql.query('SELECT nick from ' + name, function(err, results){
+
+                    if(!err){
+                        if(results.length == 0 || results == undefined){
+
+                            mysql.query('DROP TABLE IF EXISTS ' + name + ', chat_' + name, function(err, results){
+
+                                if(!err){
+
+                                    mysql.query('DELETE FROM rooms WHERE name=?', name, function(err, results){
+
+                                        if(!err){
+
+                                        }else{
+                                            throw err;
+                                        }
+                                    });
+
+                                }else{
+                                    throw err;
+                                }
+                            });
+                        }
+                    }else{
+                        throw err;
+                    }
+                });
+            }
+
         }else{
             throw err;
         }
