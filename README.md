@@ -13,7 +13,7 @@ a couple of node-modules:
 * [node-mysql](https://github.com/felixge/node-mysql) *Required*
 * [forever.js](https://github.com/nodejitsu/forever) *Optional*
 
-## If you are running on localhost ##
+### If you are running on localhost
 ---------------------
 
 * Start your XAMPP/MAMP/WAMP server
@@ -27,7 +27,7 @@ a couple of node-modules:
 *"http://localhost:8000/" in the browser you should receive*
 *"Welcome to socket.io".*
 
-## If you are running on an external server ##
+### If you are running on an external server
 ----------------------
 
 * Change in the ../js/client/client.js file the localhost to your URI
