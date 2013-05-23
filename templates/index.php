@@ -13,7 +13,7 @@ session_set_cookie_params(2*7*24*60*60);
 
 session_start();
 
-if(isset($_SESSION['last_on']) && (time() - $_SESSION['last_on']) > 1800){
+if(isset($_SESSION['last_on']) && (time() - $_SESSION['last_on']) > 10){
     killSession();
 }
 $_SESSION['last_on'] = time();
