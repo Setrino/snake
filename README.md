@@ -14,7 +14,7 @@ a couple of node-modules:
 * [forever.js](https://github.com/nodejitsu/forever) *Optional*
 
 ### If you are running on localhost
----------------------
+=========
 
 * Start your XAMPP/MAMP/WAMP server
 
@@ -28,7 +28,7 @@ a couple of node-modules:
 *"Welcome to socket.io".*
 
 ### If you are running on an external server
-----------------------
+=========
 
 * Change in the ../js/client/client.js file the localhost to your URI
 (e.g. http://localhost -> http://google.com)
@@ -36,6 +36,8 @@ a couple of node-modules:
 * Follow the steps as above (to start node.js you will probably need
 SSH or Telnet access to your server. If you don't have them, you cannot
 install nor run node.js).
+
+=========
 
 **Happy Snaking!**
 
