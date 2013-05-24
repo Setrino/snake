@@ -29,7 +29,7 @@ function resizePage() {
         })
 
         $('.container').css({
-            margin: "12px 0px 0px 2px"
+            margin: "12px 0px 0px 0px"
         });
 
     }else{
