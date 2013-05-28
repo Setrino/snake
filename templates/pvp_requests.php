@@ -57,6 +57,7 @@ if(isset($_POST['type']) && isset($_POST['lP'])){
     $color = '';
     $size = '';
 
+    mysql_query("set names 'utf8'");
     $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
 
     if($user_data){
@@ -119,6 +120,7 @@ if(isset($_POST['type']) && isset($_POST['player'])){
     $color = '';
     $size = '';
 
+    mysql_query("set names 'utf8'");
     $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
     $roomID = uniqid('p');
 
@@ -179,6 +181,7 @@ if(isset($_POST['room']) && isset($_POST['nick']) && isset($_POST['join'])){
     $color = '';
     $size = '';
 
+        mysql_query("set names 'utf8'");
         $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
 
         if($user_data){
@@ -212,6 +215,7 @@ if(isset($_POST['to']) && isset($_POST['r_type']) && isset($_POST['text']) && is
     $type = $_POST['r_type'];
     $text = $_POST['text'];
     $from_who = $_POST['from'];
+    mysql_query("set names 'utf8'");
     $query = mysql_query("REPLACE INTO notifications(nick, text, type, from_who) VALUES('".$nick."',
      '".$text."', '".$type."', '".$from_who."') ") or die (mysql_error());
 
@@ -229,6 +233,7 @@ if(isset($_POST['nick']) && isset($_POST['type']) && isset($_POST['from'])){
     $type = $_POST['type'];
     $from_who = $_POST['from'];
 
+    mysql_query("set names 'utf8'");
     $query = mysql_query("DELETE FROM notifications WHERE nick='".$nick."' && type='".$type."'
      && from_who='".$from_who."'") or die (mysql_error());
 
@@ -242,6 +247,7 @@ if(isset($_POST['nick']) && isset($_POST['type']) && isset($_POST['from'])){
 if(isset($_POST['nick']) && isset($_POST['notifications'])){
 
     $nick = $_POST['nick'];
+             mysql_query("set names 'utf8'");
              mysql_query('SET CHARACTER SET utf8');
     $query = mysql_query("SELECT * FROM notifications WHERE nick='".$_POST['nick']."'") or die (mysql_error());
 
@@ -262,7 +268,7 @@ if(isset($_POST['nick']) && isset($_POST['notifications'])){
 if(isset($_POST['nick']) && isset($_POST['room'])){
 
     $nick = $_POST['nick'];
-
+    mysql_query("set names 'utf8'");
     $query = mysql_query("SELECT room FROM online WHERE nick='".$_POST['nick']."'") or die (mysql_error());
 
     if($query){

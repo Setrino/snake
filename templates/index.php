@@ -20,6 +20,7 @@ $_SESSION['last_on'] = time();
 
 function killSession(){
 
+    mysql_query("set names 'utf8'");
     $query =  mysql_query("SELECT room FROM online WHERE nick='".$_SESSION['nick']."'") or die(mysql_error());
     $array = mysql_fetch_array($query, MYSQL_ASSOC);
     $room = $array['room'];
@@ -82,7 +83,7 @@ if($_POST['submit']=='Login')
 		$_POST['rememberMe'] = (int)$_POST['rememberMe'];
 
 		// Escaping all input data
-
+        mysql_query("set names 'utf8'");
         $row_u = mysql_fetch_assoc(mysql_query("SELECT id, nick FROM users WHERE nick='{$_POST['username']}'"));
 
         if(!$row_u['nick'])

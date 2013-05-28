@@ -74,7 +74,7 @@ if($_POST['submit']=='Register')
 
         $pass = mysql_real_escape_string($_POST['password']);
         // Escape the input data
-
+        mysql_query("set names 'utf8'");
         mysql_query("INSERT INTO users(nick, email, regIP, dt)
                         VALUES(
                             '".$_POST['username']."',

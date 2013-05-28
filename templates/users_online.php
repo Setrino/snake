@@ -35,6 +35,7 @@ if(is_bot()) die();
 
 // Selecting the 15 player
 $counter = 0;
+mysql_query("set names 'utf8'");
 $result = mysql_query("	SELECT nick,status
 						FROM online
 						ORDER BY status DESC

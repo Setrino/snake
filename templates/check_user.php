@@ -6,6 +6,7 @@ require_once "functions.php";
 
 if(isSet($_POST['username'])){
     $username = $_POST['username'];
+    mysql_query("set names 'utf8'");
     $sql_check = mysql_query("select id from users where nick='".$username."'") or die(mysql_error());
 
     if(mysql_num_rows($sql_check)){
@@ -33,6 +34,7 @@ if(isSet($_POST['password'])){
 
 if(isSet($_POST['email'])){
     $email = $_POST['email'];
+    mysql_query("set names 'utf8'");
     $sql_check = mysql_query("select id from users where email='".$email."'") or die(mysql_error());
 
     if(checkEmail($email)){

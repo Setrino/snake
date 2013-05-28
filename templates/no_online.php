@@ -16,6 +16,7 @@ $stringIp = $_SERVER['REMOTE_ADDR'];
 
 if($_SESSION['id']){
 // Checking wheter the visitor is already marked as being online:
+    mysql_query("set names 'utf8'");
     $status = mysql_query("SELECT status FROM online WHERE nick='".$_SESSION['nick']."'");
 
     $status_row = mysql_fetch_row($status);
