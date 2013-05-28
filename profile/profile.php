@@ -37,6 +37,11 @@ $query = mysql_query("SELECT * from users WHERE nick='$getNickURL'") or die(mysq
 $array = mysql_fetch_array($query);
 $getEmail = $array['email'];
 
+if(!$array['nick']){
+    header("Location: ../404.html");
+    exit;
+}
+
 if($_SESSION['id']){
 
     $getNick = $_SESSION['nick'];
