@@ -91,13 +91,6 @@ $("#password_v").change(function(){
         console.log("password " + password);
         console.log("password v" + password_v)
 
-        if(password == "" || password == null)
-        {
-            $("#status_pv").html('<span style="color: red">Fill in the password field first</span>');
-            $("#password_v").removeClass('object_ok'); // if necessary
-            $("#password_v").addClass("object_error");
-        }
-
         if(password_v != password)
         {
             $("#status_pv").html('<span style="color: red">The passwords don\'t match!</span>');
@@ -107,6 +100,13 @@ $("#password_v").change(function(){
             $("#password_v").removeClass('object_error'); // if necessary
             $("#password_v").addClass("object_ok");
             $("#status_pv").html('<img src="../images/tick.gif" align="absmiddle">');
+        }
+
+        if(password == "" || password == null)
+        {
+            $("#status_pv").html('<span style="color: red">Fill in the password field first</span>');
+            $("#password_v").removeClass('object_ok'); // if necessary
+            $("#password_v").addClass("object_error");
         }
     });
 
