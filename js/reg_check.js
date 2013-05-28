@@ -45,43 +45,70 @@ else
 
 $("#password").change(function(){
 
-    var password = $("#password").val();
+        var password = $("#password").val();
 
-    if(password.length > 7)
-    {
-    $("#status_p").html('Checking password state...');
+        if(password.length > 7)
+        {
+            $("#status_p").html('Checking password state...');
 
-    $.ajax({
-        type: "POST",
-        url: "../templates/check_user.php",
-        data: "password="+ password,
-        success: function(msg){
+            $.ajax({
+                type: "POST",
+                url: "../templates/check_user.php",
+                data: "password="+ password,
+                success: function(msg){
 
-            $("#status_p").ajaxComplete(function(event, request, settings){
+                    $("#status_p").ajaxComplete(function(event, request, settings){
 
-                if(msg == 'OK')
-                {
-                    $("#password").removeClass('object_error'); // if necessary
-                    $("#password").addClass("object_ok");
-                    $(this).html('<img src="../images/tick.gif" align="absmiddle">');
-                }
-                else
-                {
-                    $("#password").removeClass('object_ok'); // if necessary
-                    $("#password").addClass("object_error");
-                    $(this).html(msg);
+                        if(msg == 'OK')
+                        {
+                            $("#password").removeClass('object_error'); // if necessary
+                            $("#password").addClass("object_ok");
+                            $(this).html('<img src="../images/tick.gif" align="absmiddle">');
+                        }
+                        else
+                        {
+                            $("#password").removeClass('object_ok'); // if necessary
+                            $("#password").addClass("object_error");
+                            $(this).html(msg);
+                        }
+                    });
                 }
             });
         }
+        else
+        {
+            $("#status_p").html('<span style="color: red">The password should have at least <strong>8</strong> characters.</span>');
+            $("#password").removeClass('object_ok'); // if necessary
+            $("#password").addClass("object_error");
+        }
     });
-}
-    else
-    {
-        $("#status_p").html('<span style="color: red">The password should have at least <strong>8</strong> characters.</span>');
-        $("#password").removeClass('object_ok'); // if necessary
-        $("#password").addClass("object_error");
-    }
-});
+
+$("#password_v").change(function(){
+
+        var password = $("#password").val();
+        var password_v = $("#password_v").val();
+
+        console.log("password " + password);
+        console.log("password v" + password_v)
+
+        if(password == "" || password == null)
+        {
+            $("#status_pv").html('<span style="color: red">Fill in the password field first</span>');
+            $("#password_v").removeClass('object_ok'); // if necessary
+            $("#password_v").addClass("object_error");
+        }
+
+        if(password_v != password)
+        {
+            $("#status_pv").html('<span style="color: red">The passwords don\'t match!</span>');
+            $("#password_v").removeClass('object_ok'); // if necessary
+            $("#password_v").addClass("object_error");
+        }else{
+            $("#password_v").removeClass('object_error'); // if necessary
+            $("#password_v").addClass("object_ok");
+            $("#status_pv").html('<img src="../images/tick.gif" align="absmiddle">');
+        }
+    });
 
 $("#email").change(function() {
 

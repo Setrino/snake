@@ -202,6 +202,13 @@ if($_SESSION['msg'])
                     </p>
 
                     <p>
+                    <div>
+                        <input type="password" name="password" id="password_v" value="" placeholder="Repeat Password" size="23" />
+                    </div>
+                    <div id="status_pv" class="status"></div>
+                    </p>
+
+                    <p>
                         <div>
                         <input class="field" type="text" name="email" id="email" value="<?php if($_SESSION['email'])
                         {echo $_SESSION['email']; unset($_SESSION['email']);} ?>" placeholder="Email" size="23" />
