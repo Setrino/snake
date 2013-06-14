@@ -67,7 +67,7 @@ function statusCheck(){
 // Update rooms and remove the empty ones every 1 hour
 function roomsCheck(){
 
-    updateRooms();
+    updateRooms(true);
 
     setTimeout(roomsCheck, 3600000);
 }
@@ -529,7 +529,7 @@ function removeNotifications(nick){
 }
 
 // Update rooms and remove the one empty ones per 1 hour
-function updateRooms(){
+function updateRooms(cleanUp){
 
     mysql.query('SELECT * FROM rooms', function(err, results){
 
@@ -540,35 +540,42 @@ function updateRooms(){
                 var query = results[r];
                 var name = query['name'];
 
-                mysql.query('SELECT nick from ' + name, function(err, results){
+                cleanRoom(name, cleanUp);
+            }
+
+        }else{
+            throw err;
+        }
+    });
+}
+
+function cleanRoom(name, cleanUp){
+
+    mysql.query('SELECT nick from ' + name, function(err, results){
+
+        util.log('Rooms ' + name);
+
+        if(!err){
+            if(results.length == 0 || results == undefined || cleanUp){
+
+                mysql.query('DROP TABLE IF EXISTS ' + name + ', chat_' + name, function(err, results){
 
                     if(!err){
-                        if(results.length == 0 || results == undefined){
 
-                            mysql.query('DROP TABLE IF EXISTS ' + name + ', chat_' + name, function(err, results){
+                        mysql.query('DELETE FROM rooms WHERE name=?', name, function(err, results){
 
-                                if(!err){
+                            if(!err){
 
-                                    mysql.query('DELETE FROM rooms WHERE name=?', name, function(err, results){
+                            }else{
+                                throw err;
+                            }
+                        });
 
-                                        if(!err){
-
-                                        }else{
-                                            throw err;
-                                        }
-                                    });
-
-                                }else{
-                                    throw err;
-                                }
-                            });
-                        }
                     }else{
                         throw err;
                     }
                 });
             }
-
         }else{
             throw err;
         }
