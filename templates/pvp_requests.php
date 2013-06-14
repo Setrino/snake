@@ -138,6 +138,9 @@ if(isset($_POST['type']) && isset($_POST['player'])){
         if($state == 0 && $pvpNo == $type){
             echo $room;
             return;
+        }else{
+            mysql_query("DROP TABLE IF EXISTS " .$room. ", chat_" .$room);
+            mysql_query("DELETE FROM rooms WHERE name='".$room."'");
         }
     }
 

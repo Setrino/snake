@@ -29,7 +29,6 @@ if(isSet($_POST['password'])){
             echo 'OK';
         }
     }
-
 }
 
 if(isSet($_POST['email'])){
