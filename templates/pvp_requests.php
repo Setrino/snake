@@ -124,6 +124,23 @@ if(isset($_POST['type']) && isset($_POST['player'])){
     $user_data = mysql_query("SELECT color, size FROM users WHERE nick='".$nick."'") or die (mysql_error());
     $roomID = uniqid('p');
 
+    $room = mysql_query("SELECT room FROM online WHERE nick='".$nick."'") or die (mysql_error());
+
+    if(($room != '' || $room != null)){
+
+        $room_name = mysql_fetch_array($room, MYSQL_ASSOC);
+        $room = $room_name['room'];
+        $room_query = mysql_query("SELECT pvpNo, state FROM rooms WHERE name='".$room."'") or die (mysql_error());
+        $room_details = mysql_fetch_array($room_query, MYSQL_ASSOC);
+        $pvpNo = $room_details['pvpNo'];
+        $state = $room_details['state'];
+
+        if($state == 0 && $pvpNo == $type){
+            echo $room;
+            return;
+        }
+    }
+
     if($user_data){
 
         $u_rows = mysql_fetch_array($user_data, MYSQL_ASSOC);
@@ -142,6 +159,7 @@ if(isset($_POST['type']) && isset($_POST['player'])){
 
             if($pvp_room){
 
+                // ------ CHANGE ----- //
                 $add_User = mysql_query("INSERT INTO $roomID VALUES('$nick', 0, 4, 0, '$color', 4, 14, '$size', 0)")
                     or die(mysql_error());
                             mysql_query("UPDATE online SET room='$roomID', status=2 WHERE nick='$nick'") or die(mysql_error());

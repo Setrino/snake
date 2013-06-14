@@ -553,8 +553,6 @@ function cleanRoom(name, cleanUp){
 
     mysql.query('SELECT nick from ' + name, function(err, results){
 
-        util.log('Rooms ' + name);
-
         if(!err){
             if(results.length == 0 || results == undefined || cleanUp){
 

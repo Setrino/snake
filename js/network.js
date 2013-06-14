@@ -33,8 +33,7 @@ function handler ( req, res ) {
         res.end( data );
     });
 }
-/
-*
+/*
 *
 * HERE IT IS THE COOL PART
 * This function loops on itself since there are sockets connected to the page

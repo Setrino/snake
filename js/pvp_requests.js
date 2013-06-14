@@ -73,7 +73,7 @@ function hostPvP(lP, type){
 
             if(msg == 'ERROR')
             {
-                $('.info').html('<span>Failed to join a PvP Game</span>');
+                $('.info').html('<span>Failed to host a PvP Game</span>');
             }
             else
             {
